@@ -1,0 +1,13 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: nfs-csi
+provisioner: nfs.csi.k8s.io
+parameters:
+  server: 192.168.11.83
+  share: /volume1/k8sCluster
+reclaimPolicy: Delete # Use "Retain" if you don't want automatic storage deletion
+volumeBindingMode: Immediate
+mountOptions:
+  - hard
+  - nfsvers=4.1
