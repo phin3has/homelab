@@ -1,3 +1,5 @@
+# storage.yaml
+---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -9,4 +11,18 @@ spec:
   resources:
     requests:
       storage: 1Gi
-  storageClassName: longhorn  # This assumes Longhorn is installed
+  storageClassName: longhorn
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: linkding-pvc-synology
+  namespace: linkding
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: synology-iscsi
