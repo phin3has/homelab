@@ -28,9 +28,9 @@ spec:
             allowPrivilegeEscalation: false
 
           volumeMounts:
-            - name: linkding-pvc
+            - name: linkding-pvc-synology    # Changed this line
               mountPath: /etc/linkding/data
       volumes:
-        - name: linkding-pvc
+        - name: linkding-pvc-synology        # Changed this line
           persistentVolumeClaim:
-            claimName: linkding-pvc
+            claimName: linkding-pvc-synology  # Changed this line
