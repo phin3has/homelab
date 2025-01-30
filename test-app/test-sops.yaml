@@ -6,17 +6,20 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/phin3has/homelab  # Replace with your repo
+    repoURL: https://github.com/phin3has/homelab
     targetRevision: HEAD
-    path: .  # Adjust this to wherever your encrypted secret is
+    path: .
     plugin:
       name: sops
+      env:
+        - name: SOPS_AGE_KEY_FILE
+          value: /sops/age/age_key.txt
+        - name: sops_file
+          value: test-secret.enc.yaml
   destination:
     server: https://kubernetes.default.svc
-    namespace: default  # Change if you want the secret in a different namespace
+    namespace: default
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
