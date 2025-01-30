@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: test-sops
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/phin3has/homelab  # Replace with your repo
+    targetRevision: HEAD
+    path: .  # Adjust this to wherever your encrypted secret is
+    plugin:
+      name: sops
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default  # Change if you want the secret in a different namespace
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
