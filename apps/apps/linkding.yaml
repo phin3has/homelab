@@ -8,7 +8,7 @@ spec:
     namespace: ''
     server: https://kubernetes.default.svc
   source:
-    path: ../linkding
+    path: apps/linkding
     repoURL: git@github.com:phin3has/homelab.git
     targetRevision: HEAD
   sources: []
