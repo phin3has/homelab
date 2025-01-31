@@ -2,10 +2,11 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: linkding
+  namespace: argocd
 spec:
   destination:
     name: ''
-    namespace: ''
+    namespace: linkding
     server: https://kubernetes.default.svc
   source:
     path: apps/linkding
