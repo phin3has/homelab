@@ -68,7 +68,7 @@ data:
   config.yaml: |
     # Name of the tunnel you want to run
     
-    tunnel: ld
+    tunnel: links
 
     credentials-file: /etc/cloudflared/creds/credentials.json
 
@@ -78,7 +78,7 @@ data:
     loglevel: debug
 
     ingress:
-    - hostname: ld.phin3has.me
+    - hostname: links.phin3has.me
       service: http://linkding.linkding.svc.cluster.local:9090
 
     # This rule sends traffic to the built-in hello-world HTTP server. This can help debug connectivity
