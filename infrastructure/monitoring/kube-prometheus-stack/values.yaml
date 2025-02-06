@@ -1,5 +1,10 @@
 prometheus-node-exporter:
   enabled: false
+
+prometheusOperator:
+  nodeExporter:
+    enabled: false
+
 kubeStateMetrics:
   enabled: true
 
