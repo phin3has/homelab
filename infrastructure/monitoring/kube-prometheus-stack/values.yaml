@@ -1,3 +1,6 @@
+prometheus-node-exporter:
+  enabled: false
+
 grafana:
   persistence:
     enabled: true
