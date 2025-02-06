@@ -5,21 +5,17 @@ metadata:
   namespace: argocd
 spec:
   project: default
-  source:
-    repoURL: https://prometheus-community.github.io/helm-charts
-    chart: kube-prometheus-stack
-    targetRevision: 68.4.5
-    helm:
-      valueFileSchemes:
-        - https
-        - git
-      valuesFiles:
-        - $values/infrastructure/monitoring/kube-prometheus-stack/values.yaml
   sources:
+    - repoURL: https://prometheus-community.github.io/helm-charts
+      chart: kube-prometheus-stack
+      targetRevision: 68.4.5
+      helm:
+        valueFiles:
+          - values.yaml
     - repoURL: https://github.com/phin3has/homelab
       targetRevision: HEAD
-      ref: values
       path: infrastructure/monitoring/kube-prometheus-stack
+      ref: values
   destination:
     server: https://kubernetes.default.svc
     namespace: monitoring
