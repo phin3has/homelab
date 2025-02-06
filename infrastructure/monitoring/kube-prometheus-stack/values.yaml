@@ -1,5 +1,8 @@
-prometheus-node-exporter:
-  enabled: false
+kubeStateMetrics:
+  enabled: true  # Keep this enabled
+
+nodeExporter:
+  enabled: false  # This disables the node exporter
 
 grafana:
   persistence:
