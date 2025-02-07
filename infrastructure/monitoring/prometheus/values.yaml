@@ -1,0 +1,29 @@
+prometheus:
+  alertmanager:
+    enabled: true
+    persistence:
+      enabled: true
+      storageClass: "iscsi-synology"
+      size: 10Gi
+  
+  server:
+    persistentVolume:
+      enabled: true
+      storageClass: "iscsi-synology"
+      size: 50Gi
+    
+    retention: "15d"
+    
+    global:
+      scrape_interval: 15s
+      evaluation_interval: 15s
+    
+    enableAdminApi: true
+    
+    resources:
+      requests:
+        cpu: 500m
+        memory: 512Mi
+      limits:
+        cpu: 1000m
+        memory: 2Gi
