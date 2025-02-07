@@ -8,7 +8,6 @@ spec:
   source:
     repoURL: git@github.com:phin3has/homelab.git
     path: infrastructure/monitoring/grafana
-    chart: grafana
     targetRevision: HEAD
   destination:
     server: https://kubernetes.default.svc
