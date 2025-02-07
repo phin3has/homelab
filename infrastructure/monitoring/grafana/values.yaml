@@ -1,3 +1,4 @@
+createSecret: false  # This is the key setting we were missing!
 # Disable the default secret creation
 useStatefulSet: false
 admin:
