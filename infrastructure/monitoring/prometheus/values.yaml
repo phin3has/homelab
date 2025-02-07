@@ -4,12 +4,27 @@ prometheus:
     persistence:
       enabled: true
       storageClass: "synology-iscsi"
+      accessModes:
+        - ReadWriteOnce
       size: 10Gi
+    statefulSet:
+      enabled: true
+    alertmanagerSpec:
+      storage:
+        volumeClaimTemplate:
+          spec:
+            storageClassName: synology-iscsi
+            accessModes: ["ReadWriteOnce"]
+            resources:
+              requests:
+                storage: 10Gi
   
   server:
     persistentVolume:
       enabled: true
       storageClass: "synology-iscsi"
+      accessModes:
+        - ReadWriteOnce
       size: 50Gi
     
     retention: "15d"
