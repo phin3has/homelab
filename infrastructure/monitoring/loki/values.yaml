@@ -1,0 +1,34 @@
+persistence:
+  enabled: true
+  storageClass: synology-iscsi
+  size: 10Gi
+  accessModes:
+  - ReadWriteOnce
+
+# Basic resource configuration
+resources:
+  limits:
+    cpu: 1000m
+    memory: 1024Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+# Configure retention
+loki:
+  auth_enabled: false
+  commonConfig:
+    replication_factor: 1
+  storage:
+    type: filesystem
+  limits_config:
+    retention_period: 7d
+
+# Service configuration
+service:
+  type: ClusterIP
+
+# Enable service monitor for Prometheus to scrape Loki metrics
+serviceMonitor:
+  enabled: true
+  interval: 1m
