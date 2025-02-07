@@ -14,21 +14,38 @@ resources:
     cpu: 100m
     memory: 128Mi
 
-# Configure retention
+# Single binary mode configuration
 loki:
   auth_enabled: false
   commonConfig:
     replication_factor: 1
   storage:
     type: filesystem
+  storage_config:
+    filesystem:
+      chunks_directory: /var/loki/chunks
+      rules_directory: /var/loki/rules
   limits_config:
     retention_period: 7d
+
+# Use monolithic mode (single binary)
+singleBinary:
+  enabled: true
+  replicas: 1
+
+# Disable scalable deployment modes
+backend:
+  enabled: false
+read:
+  enabled: false
+write:
+  enabled: false
 
 # Service configuration
 service:
   type: ClusterIP
 
-# Enable service monitor for Prometheus to scrape Loki metrics
+# Enable service monitor for Prometheus
 serviceMonitor:
   enabled: true
   interval: 1m
