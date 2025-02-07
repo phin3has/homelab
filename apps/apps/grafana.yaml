@@ -4,14 +4,22 @@ metadata:
   name: grafana
   namespace: argocd
 spec:
-  project: default
-  source:
-    repoURL: git@github.com:phin3has/homelab.git
-    path: infrastructure/monitoring/grafana
-    targetRevision: HEAD
   destination:
     server: https://kubernetes.default.svc
     namespace: monitoring
+  project: default
+  sources:
+    # Chart from Chart repo
+    - chart: grafana
+      repoURL: https://grafana.github.io/helm-charts
+      targetRevision: 8.9.0
+      helm:
+        valueFiles:
+        - $values/infrastructure/monitoring/grafana/values.yaml
+    # values from github
+    - repoURL: git@github.com:phin3has/homelab.git
+      targetRevision: HEAD
+      ref: values
   syncPolicy:
     automated:
       prune: true
