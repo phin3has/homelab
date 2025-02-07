@@ -13,6 +13,13 @@ admin:
   userKey: admin-user
   passwordKey: admin-password
 
+# Make sure there aren't any conflicting settings
+env: {}  # Clear any env settings that might override secret config
+
+# Clear any direct admin settings if they exist
+adminUser: null
+adminPassword: null
+
 # Basic settings
 replicas: 1
 deploymentStrategy:
