@@ -3,13 +3,13 @@ prometheus:
     enabled: true
     persistence:
       enabled: true
-      storageClass: "iscsi-synology"
+      storageClass: "synology-iscsi"
       size: 10Gi
   
   server:
     persistentVolume:
       enabled: true
-      storageClass: "iscsi-synology"
+      storageClass: "synology-iscsi"
       size: 50Gi
     
     retention: "15d"
