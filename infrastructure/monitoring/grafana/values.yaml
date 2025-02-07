@@ -1,0 +1,73 @@
+persistence:
+  type: pvc
+  enabled: true
+  storageClassName: synology-iscsi
+  accessModes:
+    - ReadWriteOnce
+  size: 10Gi
+  finalizers:
+    - kubernetes.io/pvc-protection
+
+admin:
+  existingSecret: "grafana-admin-secret"
+  userKey: admin-user
+  passwordKey: admin-password
+
+# Basic settings
+replicas: 1
+deploymentStrategy:
+  type: RollingUpdate
+
+# Resources
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 200m
+    memory: 256Mi
+
+# Service configuration
+service:
+  enabled: true
+  type: ClusterIP
+  port: 80
+  targetPort: 3000
+
+# Enable service monitor for Prometheus
+serviceMonitor:
+  enabled: true
+  interval: 1m
+
+# Grafana specific settings
+grafana.ini:
+  paths:
+    data: /var/lib/grafana
+    logs: /var/log/grafana
+    plugins: /var/lib/grafana/plugins
+    provisioning: /etc/grafana/provisioning
+  server:
+    root_url: http://grafana.monitoring.svc.cluster.local
+  auth:
+    disable_login_form: false
+  security:
+    allow_embedding: true
+    cookie_secure: false
+
+# Configure datasources
+datasources:
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+    - name: Prometheus
+      type: prometheus
+      url: http://prometheus-server.monitoring.svc.cluster.local
+      access: proxy
+      isDefault: true
+
+# Sidecar for auto-discovering dashboards
+sidecar:
+  dashboards:
+    enabled: true
+    label: grafana_dashboard
+    searchNamespace: monitoring
