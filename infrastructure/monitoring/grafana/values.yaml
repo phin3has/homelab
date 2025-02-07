@@ -1,3 +1,15 @@
+# Disable the default secret creation
+useStatefulSet: false
+admin:
+  existingSecret: "grafana-admin-secret"
+  userKey: admin-user
+  passwordKey: admin-password
+
+# Ensure we're not creating credentials elsewhere
+env: {}
+adminUser: null
+adminPassword: null
+
 persistence:
   type: pvc
   enabled: true
@@ -7,18 +19,6 @@ persistence:
   size: 10Gi
   finalizers:
     - kubernetes.io/pvc-protection
-
-admin:
-  existingSecret: "grafana-admin-secret"
-  userKey: admin-user
-  passwordKey: admin-password
-
-# Make sure there aren't any conflicting settings
-env: {}  # Clear any env settings that might override secret config
-
-# Clear any direct admin settings if they exist
-adminUser: null
-adminPassword: null
 
 # Basic settings
 replicas: 1
