@@ -1,40 +1,32 @@
-prometheus-node-exporter:
-  enabled: false
+fullnameOverride: "kube-prometheus-stack"
 
 prometheusOperator:
-  nodeExporter:
-    enabled: false
+  admissionWebhooks:
+    failurePolicy: Ignore
 
-kubeStateMetrics:
-  enabled: true
+prometheus:
+  prometheusSpec:
+    retention: 5d
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 50Gi
 
 grafana:
   persistence:
     enabled: true
-    storageClassName: synology-iscsi
     size: 10Gi
-  adminPassword: ${GRAFANA_ADMIN_PASSWORD}
-
-prometheus:
-  prometheusSpec:
-    storageSpec:
-      volumeClaimTemplate:
-        spec:
-          storageClassName: synology-iscsi
-          resources:
-            requests:
-              storage: 50Gi
 
 alertmanager:
   alertmanagerSpec:
     storage:
       volumeClaimTemplate:
         spec:
-          storageClassName: synology-iscsi
+          accessModes: ["ReadWriteOnce"]
           resources:
             requests:
               storage: 10Gi
 
-# Disable node-exporter to avoid PSP issues
-prometheus-node-exporter:
-  enabled: false
