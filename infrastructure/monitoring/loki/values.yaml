@@ -21,13 +21,9 @@ loki:
   limits_config:
     allow_structured_metadata: false
 
-  # Add memberlist configuration
-  memberlist:
-    join_members:
-      - loki-memberlist.monitoring.svc.cluster.local:7946
+deploymentMode: "single-binary"  # Changed to explicitly use "single-binary"
 
-deploymentMode: SingleBinary
-
+# Configure single binary mode
 singleBinary:
   replicas: 1
   persistence:
@@ -36,14 +32,21 @@ singleBinary:
     storageClass: synology-iscsi
     accessModes:
       - ReadWriteOnce
-  extraVolumeMounts:
-    - name: storage
-      mountPath: /var/loki
   podSecurityContext:
     fsGroup: 10001
     runAsGroup: 10001
     runAsNonRoot: true
     runAsUser: 10001
+
+# Explicitly disable all scalable components
+querier:
+  replicas: 0
+distributor:
+  replicas: 0
+ingester:
+  replicas: 0
+queryFrontend:
+  replicas: 0
 
 # Disable unnecessary components
 canary:
@@ -52,3 +55,7 @@ sidecar:
   enabled: false
 gateway:
   enabled: false
+monitoring:
+  selfMonitoring:
+    enabled:
+
