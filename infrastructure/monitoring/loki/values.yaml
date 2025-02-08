@@ -10,7 +10,17 @@ loki:
       chunks_directory: /var/loki/chunks
       rules_directory: /var/loki/rules
 
-deploymentMode: "SingleBinary<->SimpleScalable"  # Changed to transitional mode
+  schemaConfig:
+    configs:
+      - from: "2024-01-01"
+        store: boltdb-shipper
+        object_store: filesystem
+        schema: v13
+        index:
+          prefix: index_
+          period: 24h
+
+deploymentMode: "SingleBinary<->SimpleScalable"
 
 singleBinary:
   enabled: true
@@ -22,7 +32,7 @@ singleBinary:
     accessModes:
       - ReadWriteOnce
 
-# Set replicas to 0 for all other components
+# Set replicas to 0 for other components
 write:
   replicas: 0
 read:
