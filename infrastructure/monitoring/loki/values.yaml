@@ -1,25 +1,16 @@
-deploymentMode: SingleBinary<->SimpleScalable
-
 loki:
+  auth_enabled: false
   storage:
-    type: filesystem
     bucketNames:
       chunks: chunks
       ruler: ruler
       admin: admin
+    type: filesystem
     filesystem:
-      directory: /var/loki/chunks
-  auth_enabled: false
+      chunks_directory: /var/loki/chunks
+      rules_directory: /var/loki/rules
 
-write:
-  enabled: false
-  replicas: 0    # Explicitly set to 0
-read:
-  enabled: false
-  replicas: 0    # Explicitly set to 0
-backend:
-  enabled: false
-  replicas: 0    # Explicitly set to 0
+deploymentMode: "single-binary"  # This is crucial
 
 singleBinary:
   enabled: true
@@ -30,3 +21,11 @@ singleBinary:
     storageClass: synology-iscsi
     accessModes:
       - ReadWriteOnce
+
+# Disable microservices components
+write:
+  enabled: false
+read:
+  enabled: false
+backend:
+  enabled: false
