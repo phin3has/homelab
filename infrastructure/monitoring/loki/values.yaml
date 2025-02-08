@@ -30,6 +30,14 @@ singleBinary:
     accessModes:
       - ReadWriteOnce
 
+# Disable canary
+canary:
+  enabled: false
+
+# Disable sidecar
+sidecar:
+  enabled: false
+
 serviceMonitor:
   enabled: true
 
@@ -41,16 +49,4 @@ read:
 write:
   replicas: 0
 ruler:
-  replicas: 0
-querier:
-  replicas: 0
-queryFrontend:
-  replicas: 0
-queryScheduler:
-  replicas: 0
-distributor:
-  replicas: 0
-compactor:
-  replicas: 0
-indexGateway:
   replicas: 0
