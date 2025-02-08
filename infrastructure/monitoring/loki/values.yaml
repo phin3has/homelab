@@ -14,10 +14,12 @@ loki:
       - from: "2024-01-01"
         store: boltdb-shipper
         object_store: filesystem
-        schema: v12
+        schema: v13  # Updated from v12
         index:
           prefix: index_
           period: 24h
+  limits_config:
+    allow_structured_metadata: false  # Added this to address the error
 
 deploymentMode: SingleBinary
 
