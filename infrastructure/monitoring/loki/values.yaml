@@ -10,7 +10,7 @@ loki:
       chunks_directory: /var/loki/chunks
       rules_directory: /var/loki/rules
 
-deploymentMode: "single-binary"  # This is crucial
+deploymentMode: "SingleBinary<->SimpleScalable"  # Changed to transitional mode
 
 singleBinary:
   enabled: true
@@ -22,10 +22,12 @@ singleBinary:
     accessModes:
       - ReadWriteOnce
 
-# Disable microservices components
+# Set replicas to 0 for all other components
 write:
-  enabled: false
+  replicas: 0
 read:
-  enabled: false
+  replicas: 0
 backend:
-  enabled: false
+  replicas: 0
+ruler:
+  replicas: 0
