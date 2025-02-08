@@ -14,12 +14,17 @@ loki:
       - from: "2024-01-01"
         store: boltdb-shipper
         object_store: filesystem
-        schema: v13  # Updated from v12
+        schema: v13
         index:
           prefix: index_
           period: 24h
   limits_config:
-    allow_structured_metadata: false  # Added this to address the error
+    allow_structured_metadata: false
+
+  # Add memberlist configuration
+  memberlist:
+    join_members:
+      - loki-memberlist.monitoring.svc.cluster.local:7946
 
 deploymentMode: SingleBinary
 
@@ -31,24 +36,19 @@ singleBinary:
     storageClass: synology-iscsi
     accessModes:
       - ReadWriteOnce
+  extraVolumeMounts:
+    - name: storage
+      mountPath: /var/loki
+  podSecurityContext:
+    fsGroup: 10001
+    runAsGroup: 10001
+    runAsNonRoot: true
+    runAsUser: 10001
 
-# Disable canary
+# Disable unnecessary components
 canary:
   enabled: false
-
-# Disable sidecar
 sidecar:
   enabled: false
-
-serviceMonitor:
-  enabled: true
-
-# Disable all other components
-backend:
-  replicas: 0
-read:
-  replicas: 0
-write:
-  replicas: 0
-ruler:
-  replicas: 0
+gateway:
+  enabled: false
