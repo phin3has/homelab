@@ -21,9 +21,8 @@ loki:
   limits_config:
     allow_structured_metadata: false
 
-deploymentMode: "single-binary"  # Changed to explicitly use "single-binary"
+deploymentMode: "single"  # Changed to just "single"
 
-# Configure single binary mode
 singleBinary:
   replicas: 1
   persistence:
@@ -32,30 +31,23 @@ singleBinary:
     storageClass: synology-iscsi
     accessModes:
       - ReadWriteOnce
-  podSecurityContext:
-    fsGroup: 10001
-    runAsGroup: 10001
-    runAsNonRoot: true
-    runAsUser: 10001
 
-# Explicitly disable all scalable components
-querier:
-  replicas: 0
-distributor:
-  replicas: 0
-ingester:
-  replicas: 0
-queryFrontend:
-  replicas: 0
-
-# Disable unnecessary components
-canary:
-  enabled: false
-sidecar:
+# Disable everything else
+backend:
   enabled: false
 gateway:
   enabled: false
+ingester:
+  enabled: false
+canary:
+  enabled: false
+querier:
+  enabled: false
+queryFrontend:
+  enabled: false
+ruler:
+  enabled: false
+distributor:
+  enabled: false
 monitoring:
-  selfMonitoring:
-    enabled:
-
+  enabled: false
