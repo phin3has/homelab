@@ -1,3 +1,5 @@
+deploymentMode: SingleBinary<->SimpleScalable
+
 loki:
   storage:
     type: filesystem
@@ -11,10 +13,13 @@ loki:
 
 write:
   enabled: false
+  replicas: 0    # Explicitly set to 0
 read:
   enabled: false
+  replicas: 0    # Explicitly set to 0
 backend:
   enabled: false
+  replicas: 0    # Explicitly set to 0
 
 singleBinary:
   enabled: true
