@@ -1,3 +1,6 @@
+
+
+
 # values.yaml
 daemonset:
   enabled: true
@@ -13,8 +16,9 @@ extraPorts:
     containerPort: 1514
     protocol: TCP
     service:
-      type: LoadBalancer  # Changed from NodePort to LoadBalancer
+      type: NodePort
       port: 1514
+      nodePort: 31514
 
 # Modified readiness probe
 readinessProbe:
