@@ -1,0 +1,74 @@
+# values.yaml
+extraArgs:
+  - -config.expand-env=true
+
+config:
+  logLevel: info
+  serverPort: 3101
+  
+  clients:
+    - url: http://loki.monitoring.svc.cluster.local:3100/loki/api/v1/push
+
+  snippets:
+    pfsense_filter: |
+      - selector: '{job="pfsense"}'
+        stages:
+          - json:
+              expressions:
+                timestamp: timestamp
+                level: level
+                message: message
+          - timestamp:
+              source: timestamp
+              format: RFC3339
+          - labels:
+              level:
+
+  positions:
+    filename: /run/promtail/positions.yaml
+
+  scrapeConfigs:
+    # PfSense syslog configuration
+    - job_name: pfsense
+      syslog:
+        listen_address: 0.0.0.0:1514
+        listen_protocol: tcp
+        label_structured_data: yes
+        labels:
+          job: pfsense
+      relabel_configs:
+        - action: labelmap
+          regex: __syslog_connection_ip_address
+          replacement: client_ip
+        - action: labelmap
+          regex: __syslog_message_severity
+          replacement: severity
+        - action: labelmap
+          regex: __syslog_message_facility
+          replacement: facility
+        - action: labelmap
+          regex: __syslog_message_hostname
+          replacement: hostname
+
+service:
+  port: 3101
+  syslog:
+    port: 1514
+    protocol: TCP
+
+serviceMonitor:
+  enabled: true
+  interval: 15s
+
+tolerations:
+  - effect: NoSchedule
+    operator: Exists
+
+resources:
+  limits:
+    cpu: 200m
+    memory: 256Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
