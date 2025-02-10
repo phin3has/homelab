@@ -1,21 +1,36 @@
 # values.yaml
-extraArgs:
-  - -config.expand-env=true
+daemonset:
+  enabled: true
 
-# Enable the service
+# Service configuration
 service:
   enabled: true
 
-# Configure the extra ports using the new structure
+# Extra ports config for syslog
 extraPorts:
   syslog:
     name: tcp-syslog
     containerPort: 1514
     protocol: TCP
     service:
-      type: NodePort
+      type: LoadBalancer  # Changed from NodePort to LoadBalancer
       port: 1514
-      nodePort: 31514
+
+# Modified readiness probe
+readinessProbe:
+  failureThreshold: 5
+  httpGet:
+    path: /ready
+    port: http-metrics
+  initialDelaySeconds: 30
+  periodSeconds: 15
+  timeoutSeconds: 5
+
+# Port configuration
+ports:
+  - name: http-metrics
+    containerPort: 3101
+    protocol: TCP
 
 config:
   logLevel: info
@@ -69,10 +84,7 @@ serviceMonitor:
   enabled: true
   interval: 15s
 
-tolerations:
-  - effect: NoSchedule
-    operator: Exists
-
+# Resource limits
 resources:
   limits:
     cpu: 200m
@@ -80,3 +92,11 @@ resources:
   requests:
     cpu: 100m
     memory: 128Mi
+
+# Container security context
+containerSecurityContext:
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop:
+      - ALL
+  allowPrivilegeEscalation: false
