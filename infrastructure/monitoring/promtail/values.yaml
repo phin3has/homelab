@@ -50,21 +50,22 @@ config:
           regex: __syslog_message_hostname
           replacement: hostname
 
-# Update your values.yaml to include this service configuration
+# Updated service configuration
 service:
-  syslog:
-    enabled: true
-    type: NodePort
-    port: 1514
-    protocol: TCP
-    nodePort: 31514  # You can specify a different port if needed
+  enabled: true
   
-  # Keep the existing metrics service
-  metrics:
-    enabled: true
-    port: 3101
-    type: ClusterIP
-          
+  # Metrics service
+  port: 3101
+  
+  # Dedicated syslog service
+  extraPorts:
+    - name: syslog
+      port: 1514
+      protocol: TCP
+      targetPort: 1514
+      nodePort: 31514
+  type: NodePort
+
 serviceMonitor:
   enabled: true
   interval: 15s
@@ -80,4 +81,3 @@ resources:
   requests:
     cpu: 100m
     memory: 128Mi
-
