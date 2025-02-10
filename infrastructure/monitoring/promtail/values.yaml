@@ -2,6 +2,21 @@
 extraArgs:
   - -config.expand-env=true
 
+# Enable the service
+service:
+  enabled: true
+
+# Configure the extra ports using the new structure
+extraPorts:
+  syslog:
+    name: tcp-syslog
+    containerPort: 1514
+    protocol: TCP
+    service:
+      type: NodePort
+      port: 1514
+      nodePort: 31514
+
 config:
   logLevel: info
   serverPort: 3101
@@ -49,22 +64,6 @@ config:
         - action: labelmap
           regex: __syslog_message_hostname
           replacement: hostname
-
-# Updated service configuration
-service:
-  enabled: true
-  
-  # Metrics service
-  port: 3101
-  
-  # Dedicated syslog service
-  extraPorts:
-    - name: syslog
-      port: 1514
-      protocol: TCP
-      targetPort: 1514
-      nodePort: 31514
-  type: NodePort
 
 serviceMonitor:
   enabled: true
