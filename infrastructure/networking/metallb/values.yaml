@@ -70,3 +70,16 @@ prometheus:
 crds:
   enabled: true
   validationFailurePolicy: Fail
+  # Force cleanup and recreation of CRDs
+  cleanupOnUninstall: true
+
+# Webhook configuration
+webhook:
+  enable: true
+  namespaceSelector: {}
+  timeoutSeconds: 5
+  failurePolicy: Fail
+  securePort: 9443
+  keepCRDs: false
+  # This will force CRD recreation
+  cleanupOnUninstall: true
