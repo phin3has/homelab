@@ -64,17 +64,13 @@ ssl:
   permanentRedirect: false
   insecureSkipVerify: true
 
-# Persistent storage configuration for Synology CSI
+# Storage configuration
 persistence:
   enabled: true
   name: traefik
   accessMode: ReadWriteOnce
   size: 1Gi
-  storageClass: "csi-san-synology"  # Adjust this to match your Synology storage class name
-  annotations:
-    csi.storage.k8s.io/fstype: "ext4"
-  # Additional mount options if needed
-  mountOptions: []
+  storageClass: "synology-iscsi"
 
 # Resource limits
 resources:
