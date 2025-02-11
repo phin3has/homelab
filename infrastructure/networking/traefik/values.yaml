@@ -10,39 +10,18 @@ deployment:
   annotations: {}
   podAnnotations: {}
 
-# Health check configuration
-healthCheck:
-  readinessProbe:
-    failureThreshold: 3
-    initialDelaySeconds: 10
-    periodSeconds: 10
-    successThreshold: 1
-    timeoutSeconds: 2
-  livenessProbe:
-    failureThreshold: 3
-    initialDelaySeconds: 10
-    periodSeconds: 10
-    successThreshold: 1
-    timeoutSeconds: 2
-
 # Service configuration
 service:
   enabled: true
   type: NodePort
-  spec:
-    externalTrafficPolicy: Local
   ports:
     web:
       port: 80
-      nodePort: 30080
+      nodePort: 30596
       protocol: TCP
     websecure:
       port: 443
-      nodePort: 30443
-      protocol: TCP
-    traefik:
-      port: 9000
-      nodePort: 30900
+      nodePort: 30128
       protocol: TCP
 
 # Ports configuration
@@ -57,11 +36,17 @@ ports:
     expose: {}
     exposedPort: 443
     protocol: TCP
-  traefik:
-    port: 9000
-    expose: {}
-    exposedPort: 9000
-    protocol: TCP
+
+# Entry points configuration
+entryPoints:
+  web:
+    address: ":80"
+    forwardedHeaders:
+      insecure: true
+  websecure:
+    address: ":443"
+    forwardedHeaders:
+      insecure: true
 
 # IngressClass configuration
 ingressClass:
@@ -83,8 +68,6 @@ providers:
 # SSL configuration
 ssl:
   enabled: false
-  persistence:
-    enabled: false
   https:
     enabled: false
 
@@ -111,23 +94,9 @@ securityContext:
   runAsNonRoot: true
   runAsUser: 65532
 
-# Metrics
-metrics:
-  prometheus:
-    enabled: true
-    serviceMonitor:
-      enabled: true
-
-# Dashboard and API configuration
-api:
-  dashboard: true
-  insecure: true
-
 # Additional arguments
 additionalArguments:
-  - "--api.dashboard=true"
-  - "--api.insecure=true"
-  - "--ping=true"
-  - "--ping.entrypoint=traefik"
-  - "--log.level=INFO"
+  - "--entrypoints.web.address=:80"
+  - "--entrypoints.websecure.address=:443"
   - "--providers.kubernetesingress.ingressclass=traefik"
+  - "--log.level=DEBUG"  # Increased log level for troubleshooting
