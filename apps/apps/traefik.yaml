@@ -5,10 +5,9 @@ metadata:
   namespace: argocd
 spec:
   destination:
-    name: ''
-    namespace: traefik
     server: https://kubernetes.default.svc
-  source:
+    namespace: traefik
+  sources:
     - chart: traefik
       repoURL: https://traefik.github.io/charts
       targetRevision: 34.3.0
