@@ -25,26 +25,24 @@ healthCheck:
     successThreshold: 1
     timeoutSeconds: 2
 
-# Service configuration for Talos with kube-vip
+# Service configuration
 service:
   enabled: true
-  type: LoadBalancer
-  annotations: {}
+  type: NodePort
   spec:
-    loadBalancerIP: "10.0.11.50"
     externalTrafficPolicy: Local
   ports:
     web:
       port: 80
-      exposedPort: 80
+      nodePort: 30080
       protocol: TCP
     websecure:
       port: 443
-      exposedPort: 443
+      nodePort: 30443
       protocol: TCP
     traefik:
       port: 9000
-      exposedPort: 9000
+      nodePort: 30900
       protocol: TCP
 
 # Ports configuration
@@ -132,3 +130,4 @@ additionalArguments:
   - "--ping=true"
   - "--ping.entrypoint=traefik"
   - "--log.level=INFO"
+  - "--providers.kubernetesingress.ingressclass=traefik"
