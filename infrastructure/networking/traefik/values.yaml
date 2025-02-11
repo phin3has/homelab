@@ -10,26 +10,20 @@ deployment:
   annotations: {}
   podAnnotations: {}
 
-# Pod configuration
-readinessProbe:
-  httpGet:
-    path: /ping
-    port: 9000
-  failureThreshold: 3
-  initialDelaySeconds: 10
-  periodSeconds: 10
-  successThreshold: 1
-  timeoutSeconds: 2
-
-livenessProbe:
-  httpGet:
-    path: /ping
-    port: 9000
-  failureThreshold: 3
-  initialDelaySeconds: 10
-  periodSeconds: 10
-  successThreshold: 1
-  timeoutSeconds: 2
+# Health check configuration
+healthCheck:
+  readinessProbe:
+    failureThreshold: 3
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 2
+  livenessProbe:
+    failureThreshold: 3
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 2
 
 # Service configuration for Talos with kube-vip
 service:
@@ -50,7 +44,6 @@ service:
       protocol: TCP
     traefik:
       port: 9000
-      expose: true
       exposedPort: 9000
       protocol: TCP
 
@@ -68,7 +61,7 @@ ports:
     protocol: TCP
   traefik:
     port: 9000
-    expose: true
+    expose: {}
     exposedPort: 9000
     protocol: TCP
 
@@ -95,8 +88,6 @@ ssl:
   persistence:
     enabled: false
   https:
-    enabled: false
-  acme:
     enabled: false
 
 # Persistence configuration
