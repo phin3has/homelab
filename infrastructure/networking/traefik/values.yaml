@@ -10,6 +10,27 @@ deployment:
   annotations: {}
   podAnnotations: {}
 
+# Pod configuration
+readinessProbe:
+  httpGet:
+    path: /ping
+    port: 9000
+  failureThreshold: 3
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  successThreshold: 1
+  timeoutSeconds: 2
+
+livenessProbe:
+  httpGet:
+    path: /ping
+    port: 9000
+  failureThreshold: 3
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  successThreshold: 1
+  timeoutSeconds: 2
+
 # Service configuration for Talos with kube-vip
 service:
   enabled: true
@@ -27,6 +48,11 @@ service:
       port: 443
       exposedPort: 443
       protocol: TCP
+    traefik:
+      port: 9000
+      expose: true
+      exposedPort: 9000
+      protocol: TCP
 
 # Ports configuration
 ports:
@@ -39,6 +65,11 @@ ports:
     port: 443
     expose: {}
     exposedPort: 443
+    protocol: TCP
+  traefik:
+    port: 9000
+    expose: true
+    exposedPort: 9000
     protocol: TCP
 
 # IngressClass configuration
@@ -98,8 +129,16 @@ metrics:
     serviceMonitor:
       enabled: true
 
+# Dashboard and API configuration
+api:
+  dashboard: true
+  insecure: true
+
 # Additional arguments
 additionalArguments:
   - "--api.dashboard=true"
+  - "--api.insecure=true"
+  - "--ping=true"
+  - "--ping.entrypoint=traefik"
   - "--log.level=INFO"
   - "--providers.kubernetesingress.ingressclass=traefik"
