@@ -29,9 +29,9 @@ healthCheck:
 service:
   enabled: true
   type: LoadBalancer
-  annotations: 
-    kube-vip.io/loadbalancerip: "10.0.11.50" # Replace with your desired IP
+  annotations: {}
   spec:
+    loadBalancerIP: "10.0.11.50"
     externalTrafficPolicy: Local
   ports:
     web:
@@ -132,4 +132,3 @@ additionalArguments:
   - "--ping=true"
   - "--ping.entrypoint=traefik"
   - "--log.level=INFO"
-  - "--providers.kubernetesingress.ingressclass=traefik"
