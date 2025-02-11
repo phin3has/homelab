@@ -15,7 +15,7 @@ service:
   enabled: true
   type: LoadBalancer
   annotations: 
-    kube-vip.io/loadbalancerip: "192.168.1.200" # Replace with your desired IP
+    kube-vip.io/loadbalancerip: "10.0.11.50" # Replace with your desired IP
   spec:
     externalTrafficPolicy: Local
   ports:
