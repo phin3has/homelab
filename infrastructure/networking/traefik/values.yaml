@@ -6,6 +6,116 @@ global:
 # Deployment specific configuration
 deployment:
   enabled: true
+  replicas: 1  # Single replica for ACME support
+  annotations: {}
+  podAnnotations: {}
+
+# Service configuration for Talos with kube-vip
+service:
+  enabled: true
+  type: LoadBalancer
+  annotations: 
+    kube-vip.io/loadbalancerip: "192.168.1.200" # Replace with your desired IP
+  spec:
+    externalTrafficPolicy: Local
+  ports:
+    web:
+      port: 80
+      exposedPort: 80
+      protocol: TCP
+    websecure:
+      port: 443
+      exposedPort: 443
+      protocol: TCP
+
+# Ports configuration
+ports:
+  web:
+    port: 80
+    expose: {}
+    exposedPort: 80
+    protocol: TCP
+  websecure:
+    port: 443
+    expose: {}
+    exposedPort: 443
+    protocol: TCP
+
+# IngressClass configuration
+ingressClass:
+  enabled: true
+  isDefaultClass: true
+
+# Provider configuration
+providers:
+  kubernetesCRD:
+    enabled: true
+    allowCrossNamespace: true
+    allowExternalNameServices: true
+  kubernetesIngress:
+    enabled: true
+    allowExternalNameServices: true
+    publishedService:
+      enabled: true
+
+# SSL configuration
+ssl:
+  enabled: true
+  permanentRedirect: false
+  insecureSkipVerify: true
+
+# Storage configuration
+persistence:
+  enabled: true
+  name: traefik
+  accessMode: ReadWriteOnce
+  size: 1Gi
+  storageClass: "synology-iscsi"
+
+# Resource limits
+resources:
+  requests:
+    cpu: "100m"
+    memory: "100Mi"
+  limits:
+    cpu: "300m"
+    memory: "300Mi"
+
+# Security context
+securityContext:
+  capabilities:
+    drop: [ALL]
+    add: [NET_BIND_SERVICE]
+  readOnlyRootFilesystem: true
+  runAsGroup: 65532
+  runAsNonRoot: true
+  runAsUser: 65532
+
+# Metrics
+metrics:
+  prometheus:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+
+# Additional arguments
+additionalArguments:
+  - "--api.dashboard=true"
+  - "--log.level=INFO"
+  - "--providers.kubernetesingress.ingressclass=traefik"
+  - "--entrypoints.web.proxyprotocol.insecure"
+
+
+
+
+# Global settings
+global:
+  checknewversion: false
+  sendanonymoususage: false
+
+# Deployment specific configuration
+deployment:
+  enabled: true
   replicas: 2
   annotations: {}
   podAnnotations: {}
@@ -112,3 +222,4 @@ additionalArguments:
   - "--certificatesresolvers.le.acme.storage=/data/acme.json"
   - "--certificatesresolvers.le.acme.httpchallenge=true"
   - "--certificatesresolvers.le.acme.httpchallenge.entrypoint=web"
+  - "--entrypoints.websecure.proxyprotocol.insecure"
