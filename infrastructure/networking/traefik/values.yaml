@@ -15,7 +15,7 @@ service:
   enabled: true
   type: LoadBalancer
   annotations: 
-    kube-vip.io/loadbalancerip: "10.0.11.50" # Replace with your desired IP
+    kube-vip.io/loadbalancerip: "192.168.1.200" # Replace with your desired IP
   spec:
     externalTrafficPolicy: Local
   ports:
@@ -64,12 +64,17 @@ ssl:
   permanentRedirect: false
   insecureSkipVerify: true
 
-# Persistent storage for SSL certificates
+# Persistent storage configuration for Synology CSI
 persistence:
   enabled: true
-  path: /data
-  size: 128Mi
-  storageClass: "synology-iscsi" # Adjust based on your iSCSI storage class
+  name: traefik
+  accessMode: ReadWriteOnce
+  size: 1Gi
+  storageClass: "csi-san-synology"  # Adjust this to match your Synology storage class name
+  annotations:
+    csi.storage.k8s.io/fstype: "ext4"
+  # Additional mount options if needed
+  mountOptions: []
 
 # Resource limits
 resources:
