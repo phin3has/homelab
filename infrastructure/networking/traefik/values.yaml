@@ -58,19 +58,21 @@ providers:
     publishedService:
       enabled: true
 
-# SSL configuration
+# SSL configuration - using Let's Encrypt HTTP challenge instead of storing certs
 ssl:
   enabled: true
   permanentRedirect: false
   insecureSkipVerify: true
 
-# Storage configuration
+# Use emptyDir instead of PVC for multi-replica support
 persistence:
-  enabled: true
-  name: traefik
-  accessMode: ReadWriteOnce
-  size: 1Gi
-  storageClass: "synology-iscsi"
+  enabled: false
+
+# Additional volume for acme certs using emptyDir
+volumes:
+  - name: acme
+    mountPath: /data
+    type: emptyDir
 
 # Resource limits
 resources:
@@ -105,3 +107,8 @@ additionalArguments:
   - "--providers.kubernetesingress.ingressclass=traefik"
   - "--entrypoints.web.proxyprotocol.insecure"
   - "--entrypoints.websecure.proxyprotocol.insecure"
+  # Configure HTTP challenge for Let's Encrypt
+  - "--certificatesresolvers.le.acme.email=your-email@domain.com"
+  - "--certificatesresolvers.le.acme.storage=/data/acme.json"
+  - "--certificatesresolvers.le.acme.httpchallenge=true"
+  - "--certificatesresolvers.le.acme.httpchallenge.entrypoint=web"
