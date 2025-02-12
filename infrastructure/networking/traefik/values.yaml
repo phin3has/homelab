@@ -22,13 +22,19 @@ service:
     metallb.universe.tf/allow-shared-ip: true
   spec:
     loadBalancerIP: "10.0.11.100"  # Assign from your MetalLB pool
-  ports:
-    web:
-      port: 80
-      protocol: TCP
-    websecure:
-      port: 443
-      protocol: TCP
+
+# Ports configuration
+ports:
+  web:
+    port: 80
+    expose: {}
+    exposedPort: 80
+    protocol: TCP
+  websecure:
+    port: 443
+    expose: {}
+    exposedPort: 443
+    protocol: TCP
 
 # Persistent storage configuration for certificates
 persistence:
@@ -61,17 +67,6 @@ resources:
   limits:
     cpu: "300m"
     memory: "256Mi"
-
-# Ports configuration
-ports:
-  web:
-    expose: true
-    port: 80
-    protocol: TCP
-  websecure:
-    expose: true
-    port: 443
-    protocol: TCP
 
 # TLS configuration
 ssl:
