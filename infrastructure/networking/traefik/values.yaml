@@ -1,55 +1,88 @@
-# Global settings
-global:
-  checknewversion: false
-  sendanonymoususage: false
-
-# Deployment specific configuration
+# Traefik Values Configuration
 deployment:
   enabled: true
   replicas: 2
-
-# Entry points configuration
-entryPoints:
-  web:
-    address: ":80"
-    forwardedHeaders:
-      enabled: true
-      trustedIPs:
-        - "10.0.0.0/8"
-        - "192.168.0.0/16"
-    transport:
-      lifeCycle:
-        requestAcceptGraceTimeout: "10s"
-      respondingTimeouts:
-        readTimeout: "30s"
-        writeTimeout: "30s"
-        idleTimeout: "60s"
+  podSecurityContext:
+    fsGroup: 65532
+  securityContext:
+    capabilities:
+      drop: []
+      add:
+        - NET_BIND_SERVICE
+    runAsUser: 0
+    runAsGroup: 0
+    runAsNonRoot: false
+    privileged: true
 
 # Service configuration
 service:
   enabled: true
-  type: NodePort
-  annotations: {}
+  type: LoadBalancer
+  annotations:
+    metallb.universe.tf/allow-shared-ip: true
   spec:
-    externalTrafficPolicy: Cluster
+    loadBalancerIP: "10.0.11.100"  # Assign from your MetalLB pool
   ports:
     web:
       port: 80
-      nodePort: 30596
       protocol: TCP
+    websecure:
+      port: 443
+      protocol: TCP
+
+# Persistent storage configuration for certificates
+persistence:
+  enabled: true
+  storageClass: "synology-iscsi"  # Your Synology iSCSI storage class
+  accessMode: ReadWriteOnce
+  size: 128Mi
+
+# RBAC configuration
+rbac:
+  enabled: true
+  namespaced: false
+
+# Security settings
+additionalArguments:
+  - "--global.checknewversion=false"
+  - "--global.sendanonymoususage=false"
+  - "--entryPoints.web.forwardedHeaders.insecure"
+  - "--entryPoints.websecure.forwardedHeaders.insecure"
+
+# Pod security settings
+podSecurityPolicy:
+  enabled: true
+
+# Resources
+resources:
+  requests:
+    cpu: "100m"
+    memory: "128Mi"
+  limits:
+    cpu: "300m"
+    memory: "256Mi"
 
 # Ports configuration
 ports:
   web:
+    expose: true
     port: 80
-    expose: {}
-    exposedPort: 80
+    protocol: TCP
+  websecure:
+    expose: true
+    port: 443
     protocol: TCP
 
-# IngressClass configuration
-ingressClass:
+# TLS configuration
+ssl:
   enabled: true
-  isDefaultClass: true
+  enforced: false
+  permanentRedirect: false
+
+# Metrics
+metrics:
+  prometheus:
+    enabled: true
 
 # Provider configuration
 providers:
@@ -60,37 +93,32 @@ providers:
   kubernetesIngress:
     enabled: true
     allowExternalNameServices: true
-    publishedService:
-      enabled: true
 
-# Resource limits
-resources:
-  requests:
-    cpu: "100m"
-    memory: "100Mi"
-  limits:
-    cpu: "300m"
-    memory: "300Mi"
+# Volume mounts for certificates
+volumes:
+  - name: certificate-storage
+    persistentVolumeClaim:
+      claimName: traefik-certs
 
-# Security context
-securityContext:
-  capabilities:
-    drop: [ALL]
-    add: [NET_BIND_SERVICE]
-  readOnlyRootFilesystem: true
-  runAsGroup: 65532
-  runAsNonRoot: true
-  runAsUser: 65532
+# Tolerations to run on master nodes if needed
+tolerations:
+  - key: node-role.kubernetes.io/master
+    operator: Exists
+    effect: NoSchedule
+  - key: node-role.kubernetes.io/control-plane
+    operator: Exists
+    effect: NoSchedule
 
-# Logs configuration
-logs:
-  general:
-    level: DEBUG
-  access:
-    enabled: true
-
-# Additional arguments
-additionalArguments:
-  - "--providers.kubernetesingress.ingressclass=traefik"
-  - "--serversTransport.forwardingTimeouts.dialTimeout=30s"
-  - "--serversTransport.forwardingTimeouts.responseHeaderTimeout=30s"
+# Node affinity/anti-affinity rules
+affinity:
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAffinityTerm:
+          labelSelector:
+            matchExpressions:
+              - key: app.kubernetes.io/name
+                operator: In
+                values:
+                  - traefik
+          topologyKey: kubernetes.io/hostname
