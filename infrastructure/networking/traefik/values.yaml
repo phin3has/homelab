@@ -1,4 +1,12 @@
 # Traefik Values Configuration
+
+# Pod annotations for security context
+podAnnotations:
+  container.apparmor.security.beta.kubernetes.io/traefik: "unconfined"
+  pod-security.kubernetes.io/enforce: "privileged"
+  pod-security.kubernetes.io/audit: "privileged"
+  pod-security.kubernetes.io/warn: "privileged"
+
 deployment:
   enabled: true
   kind: Deployment
@@ -14,11 +22,6 @@ deployment:
     runAsGroup: 0
     runAsNonRoot: false
     privileged: true
-  annotations:
-    container.apparmor.security.beta.kubernetes.io/traefik: "unconfined"
-    pod-security.kubernetes.io/enforce: "privileged"
-    pod-security.kubernetes.io/audit: "privileged"
-    pod-security.kubernetes.io/warn: "privileged"
 
 ingressClass:
   enabled: true
@@ -44,16 +47,9 @@ service:
   enabled: true
   type: LoadBalancer
   annotations:
-    metallb.universe.tf/allow-shared-ip: true
+    metallb.universe.tf/allow-shared-ip: "true"
   spec:
-    loadBalancerIP: "10.0.11.100"  # Your MetalLB IP
-  ports:
-    web:
-      port: 80
-      protocol: TCP
-    websecure:
-      port: 443
-      protocol: TCP
+    loadBalancerIP: "10.0.11.100"
 
 # Persistent storage configuration
 persistence:
@@ -114,4 +110,3 @@ tolerations:
     effect: NoSchedule
   - key: node-role.kubernetes.io/control-plane
     operator: Exists
-    effect: NoSchedule
