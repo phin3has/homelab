@@ -1,6 +1,7 @@
 # Traefik Values Configuration
 deployment:
   enabled: true
+  kind: Deployment
   replicas: 2
   podSecurityContext:
     fsGroup: 65532
@@ -13,6 +14,30 @@ deployment:
     runAsGroup: 0
     runAsNonRoot: false
     privileged: true
+  annotations:
+    container.apparmor.security.beta.kubernetes.io/traefik: "unconfined"
+    pod-security.kubernetes.io/enforce: privileged
+    pod-security.kubernetes.io/audit: privileged
+    pod-security.kubernetes.io/warn: privileged
+
+ingressClass:
+  enabled: true
+  isDefaultClass: true
+
+# Ports configuration
+ports:
+  web:
+    port: 8000
+    expose: {}
+    exposedPort: 80
+    protocol: TCP
+  websecure:
+    port: 8443
+    expose: {}
+    exposedPort: 443
+    protocol: TCP
+    tls:
+      enabled: true
 
 # Service configuration
 service:
@@ -21,25 +46,19 @@ service:
   annotations:
     metallb.universe.tf/allow-shared-ip: true
   spec:
-    loadBalancerIP: "10.0.11.100"  # Assign from your MetalLB pool
+    loadBalancerIP: "10.0.11.100"  # Your MetalLB IP
+  ports:
+    web:
+      port: 80
+      protocol: TCP
+    websecure:
+      port: 443
+      protocol: TCP
 
-# Ports configuration
-ports:
-  web:
-    port: 80
-    expose: {}
-    exposedPort: 80
-    protocol: TCP
-  websecure:
-    port: 443
-    expose: {}
-    exposedPort: 443
-    protocol: TCP
-
-# Persistent storage configuration for certificates
+# Persistent storage configuration
 persistence:
   enabled: true
-  storageClass: "synology-iscsi"  # Your Synology iSCSI storage class
+  storageClass: "synology-iscsi"
   accessMode: ReadWriteOnce
   size: 128Mi
 
@@ -47,37 +66,6 @@ persistence:
 rbac:
   enabled: true
   namespaced: false
-
-# Security settings
-additionalArguments:
-  - "--global.checknewversion=false"
-  - "--global.sendanonymoususage=false"
-  - "--entryPoints.web.forwardedHeaders.insecure"
-  - "--entryPoints.websecure.forwardedHeaders.insecure"
-
-# Pod security settings
-podSecurityPolicy:
-  enabled: true
-
-# Resources
-resources:
-  requests:
-    cpu: "100m"
-    memory: "128Mi"
-  limits:
-    cpu: "300m"
-    memory: "256Mi"
-
-# TLS configuration
-ssl:
-  enabled: true
-  enforced: false
-  permanentRedirect: false
-
-# Metrics
-metrics:
-  prometheus:
-    enabled: true
 
 # Provider configuration
 providers:
@@ -89,22 +77,23 @@ providers:
     enabled: true
     allowExternalNameServices: true
 
-# Volume mounts for certificates
-volumes:
-  - name: certificate-storage
-    persistentVolumeClaim:
-      claimName: traefik-certs
+# Resources
+resources:
+  requests:
+    cpu: "100m"
+    memory: "128Mi"
+  limits:
+    cpu: "300m"
+    memory: "256Mi"
 
-# Tolerations to run on master nodes if needed
-tolerations:
-  - key: node-role.kubernetes.io/master
-    operator: Exists
-    effect: NoSchedule
-  - key: node-role.kubernetes.io/control-plane
-    operator: Exists
-    effect: NoSchedule
+# Additional arguments
+additionalArguments:
+  - "--global.checknewversion=false"
+  - "--global.sendanonymoususage=false"
+  - "--entryPoints.web.forwardedHeaders.insecure"
+  - "--entryPoints.websecure.forwardedHeaders.insecure"
 
-# Node affinity/anti-affinity rules
+# High Availability settings
 affinity:
   podAntiAffinity:
     preferredDuringSchedulingIgnoredDuringExecution:
@@ -117,3 +106,12 @@ affinity:
                 values:
                   - traefik
           topologyKey: kubernetes.io/hostname
+
+# Tolerations for running on control plane nodes
+tolerations:
+  - key: node-role.kubernetes.io/master
+    operator: Exists
+    effect: NoSchedule
+  - key: node-role.kubernetes.io/control-plane
+    operator: Exists
+    effect: NoSchedule
