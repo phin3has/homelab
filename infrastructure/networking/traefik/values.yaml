@@ -55,11 +55,14 @@ service:
 persistence:
   enabled: true
   name: data
-  storageClass: "synology-iscsi"
+  existingClaim: ""
+  storageClass: synology-iscsi
   accessMode: ReadWriteOnce
-  size: 128Mi
-  annotations: {}
+  size: 1Gi
+  annotations:
+    volume.beta.kubernetes.io/storage-class: "synology-iscsi"
   path: /data
+  subPath: ""
 
 # RBAC configuration
 rbac:
