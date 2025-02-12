@@ -1,4 +1,23 @@
 # Traefik Values Configuration
+deployment:
+  enabled: true
+  kind: Deployment
+  replicas: 2
+
+# Pod Security Context
+podSecurityContext:
+  fsGroup: 65532
+
+# Container Security Context
+securityContext:
+  capabilities:
+    drop: []
+    add:
+      - NET_BIND_SERVICE
+  privileged: true
+  runAsUser: 0
+  runAsGroup: 0
+  runAsNonRoot: false
 
 # Pod annotations for security context
 podAnnotations:
@@ -6,26 +25,6 @@ podAnnotations:
   pod-security.kubernetes.io/enforce: "privileged"
   pod-security.kubernetes.io/audit: "privileged"
   pod-security.kubernetes.io/warn: "privileged"
-
-deployment:
-  enabled: true
-  kind: Deployment
-  replicas: 2
-  podSecurityContext:
-    fsGroup: 65532
-  securityContext:
-    capabilities:
-      drop: []
-      add:
-        - NET_BIND_SERVICE
-    runAsUser: 0
-    runAsGroup: 0
-    runAsNonRoot: false
-    privileged: true
-
-ingressClass:
-  enabled: true
-  isDefaultClass: true
 
 # Ports configuration
 ports:
@@ -59,23 +58,6 @@ persistence:
   accessMode: ReadWriteOnce
   size: 1Gi
 
-# Security context for CSI mount compatibility
-podSecurityContext:
-  runAsUser: 0
-  runAsGroup: 0
-  fsGroup: 0
-
-securityContext:
-  capabilities:
-    drop: []
-    add:
-      - NET_BIND_SERVICE
-      - SYS_ADMIN  # Added for CSI mount operations
-  privileged: true
-  runAsUser: 0
-  runAsGroup: 0
-  runAsNonRoot: false
-
 # RBAC configuration
 rbac:
   enabled: true
@@ -106,20 +88,6 @@ additionalArguments:
   - "--global.sendanonymoususage=false"
   - "--entryPoints.web.forwardedHeaders.insecure"
   - "--entryPoints.websecure.forwardedHeaders.insecure"
-
-# High Availability settings
-affinity:
-  podAntiAffinity:
-    preferredDuringSchedulingIgnoredDuringExecution:
-      - weight: 100
-        podAffinityTerm:
-          labelSelector:
-            matchExpressions:
-              - key: app.kubernetes.io/name
-                operator: In
-                values:
-                  - traefik
-          topologyKey: kubernetes.io/hostname
 
 # Tolerations for running on control plane nodes
 tolerations:
