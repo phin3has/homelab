@@ -9,7 +9,7 @@ deployment:
       drop: []
       add:
         - NET_BIND_SERVICE
-    allowPrivilegeEscalation: true  # Explicitly allow
+    allowPrivilegeEscalation: true
     privileged: true
     runAsUser: 0
     runAsGroup: 0
@@ -50,14 +50,10 @@ service:
   spec:
     loadBalancerIP: "10.0.11.100"
 
-# Persistent storage configuration
+# Persistence configuration - Using separate volumes for each replica
 persistence:
-  enabled: true
-  name: data
-  storageClass: synology-iscsi
-  accessMode: ReadWriteOnce
-  size: 1Gi
-
+  enabled: false  # Disabled persistent storage initially
+  
 # RBAC configuration
 rbac:
   enabled: true
