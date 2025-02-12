@@ -54,9 +54,12 @@ service:
 # Persistent storage configuration
 persistence:
   enabled: true
+  name: data
   storageClass: "synology-iscsi"
   accessMode: ReadWriteOnce
   size: 128Mi
+  annotations: {}
+  path: /data
 
 # RBAC configuration
 rbac:
@@ -110,3 +113,4 @@ tolerations:
     effect: NoSchedule
   - key: node-role.kubernetes.io/control-plane
     operator: Exists
+    effect: NoSchedule
