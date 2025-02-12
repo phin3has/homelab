@@ -3,21 +3,21 @@ deployment:
   enabled: true
   kind: Deployment
   replicas: 2
+  # Container security settings at deployment level
+  securityContext:
+    capabilities:
+      drop: []
+      add:
+        - NET_BIND_SERVICE
+    allowPrivilegeEscalation: true  # Explicitly allow
+    privileged: true
+    runAsUser: 0
+    runAsGroup: 0
+    runAsNonRoot: false
 
 # Pod Security Context
 podSecurityContext:
   fsGroup: 65532
-
-# Container Security Context
-securityContext:
-  capabilities:
-    drop: []
-    add:
-      - NET_BIND_SERVICE
-  privileged: true
-  runAsUser: 0
-  runAsGroup: 0
-  runAsNonRoot: false
 
 # Pod annotations for security context
 podAnnotations:
@@ -62,16 +62,6 @@ persistence:
 rbac:
   enabled: true
   namespaced: false
-
-# Provider configuration
-providers:
-  kubernetesCRD:
-    enabled: true
-    allowCrossNamespace: true
-    allowExternalNameServices: true
-  kubernetesIngress:
-    enabled: true
-    allowExternalNameServices: true
 
 # Resources
 resources:
