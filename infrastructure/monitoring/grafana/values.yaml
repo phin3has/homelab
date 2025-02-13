@@ -72,3 +72,10 @@ sidecar:
     enabled: true
     label: grafana_dashboard
     searchNamespace: monitoring
+
+ingress:
+  enabled: true
+  ingressClassName: traefik
+
+  hosts:
+    - grafana.phin3has.local
