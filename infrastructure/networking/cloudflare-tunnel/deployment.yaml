@@ -77,7 +77,7 @@ data:
     no-autoupdate: true
 
     ingress:
-    - hostname: .phin3has.me 
+    - hostname: "*.phin3has.me" 
       service: http://traefik.traefik.svc.cluster.local:80
 
     # This rule sends traffic to the built-in hello-world HTTP server. This can help debug connectivity
