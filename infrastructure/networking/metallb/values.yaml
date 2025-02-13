@@ -14,7 +14,9 @@ speaker:
   enabled: true
   logLevel: info
   frr:
-    enabled: false
+    enabled: false  # Explicitly disable FRR
+  bgp:
+    enabled: false  # Explicitly disable BGP
   resources:
     limits:
       cpu: 100m
@@ -35,8 +37,10 @@ prometheus:
 crds:
   enabled: true
   validationFailurePolicy: Fail
+  # Do not cleanup CRDs on uninstall to prevent CA bundle issues
+  cleanupOnUninstall: false
 
 webhookConfig:
-  enable: true
+  enable: false  # Disable webhook to avoid CA bundle issues
   timeoutSeconds: 5
   failurePolicy: Fail
