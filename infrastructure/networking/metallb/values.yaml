@@ -1,15 +1,4 @@
-# MetalLB Configuration Values
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  namespace: metallb
-  name: config
-  labels:
-    pod-security.kubernetes.io/enforce: privileged
-    pod-security.kubernetes.io/audit: privileged
-    pod-security.kubernetes.io/warn: privileged
-
-# Controller configuration
+# MetalLB Helm Values
 controller:
   enabled: true
   logLevel: info
@@ -21,12 +10,11 @@ controller:
       cpu: 50m
       memory: 50Mi
 
-# Speaker configuration
 speaker:
   enabled: true
   logLevel: info
   frr:
-    enabled: true
+    enabled: false
   resources:
     limits:
       cpu: 100m
@@ -35,51 +23,20 @@ speaker:
       cpu: 50m
       memory: 50Mi
 
-# RBAC configuration
 rbac:
   create: true
 
-# Address pool configuration
-apiVersion: metallb.io/v1beta1
-kind: IPAddressPool
-metadata:
-  name: first-pool
-  namespace: metallb
-spec:
-  addresses:
-  - 10.0.11.100-10.0.11.200
-
----
-apiVersion: metallb.io/v1beta1
-kind: L2Advertisement
-metadata:
-  name: l2-advert
-  namespace: metallb
-spec:
-  ipAddressPools:
-  - first-pool
-
-# Prometheus metrics configuration
 prometheus:
   serviceMonitor:
     enabled: false
   podMonitor:
     enabled: false
 
-# CRDs configuration
 crds:
   enabled: true
   validationFailurePolicy: Fail
-  # Force cleanup and recreation of CRDs
-  cleanupOnUninstall: true
 
-# Webhook configuration
-webhook:
+webhookConfig:
   enable: true
-  namespaceSelector: {}
   timeoutSeconds: 5
   failurePolicy: Fail
-  securePort: 9443
-  keepCRDs: false
-  # This will force CRD recreation
-  cleanupOnUninstall: true
