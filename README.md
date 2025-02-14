@@ -64,15 +64,36 @@ graph TD
 The cluster configuration follows the App of Apps pattern, with the following structure:
 
 ```
-├── apps/
-│   ├── argocd/
-│   ├── monitoring/
-│   ├── storage/
-│   └── ...
-├── infrastructure/
-│   ├── talos/
-│   └── storage/
-└── manifests/
+├── apps
+│   ├── apps
+│   │   ├── cloudflare-tunnel.yaml
+│   │   ├── grafana.yaml
+│   │   ├── linkding.yaml
+│   │   ├── loki.yaml
+│   │   ├── metallb.yaml
+│   │   ├── prometheus.yaml
+│   │   ├── promtail.yaml
+│   │   ├── sealed-secrets.yaml
+│   │   └── traefik.yaml
+│   ├── apps-of-apps.yaml
+│   ├── homepage
+│   ├── linkding
+└── infrastructure
+    ├── monitoring
+    │   ├── grafana
+    │   ├── loki
+    │   ├── prometheus
+    │   └── promtail
+    ├── networking
+    │   ├── cloudflare-tunnel
+    │   ├── metallb
+    │   └── traefik
+    ├── secrets
+    │   └── sealed-secrets
+    └── storage
+        ├── longhorn
+        └── synology
+
 ```
 
 ## 🔄 Continuous Deployment
@@ -88,15 +109,12 @@ This repository uses Argo CD to automatically sync changes to the cluster. The A
 
 ### Backup
 - Persistent data is stored on Synology NAS
-- [Your backup strategy details]
+- TODO: Strategy development
 
 ## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
-## 📜 License
-
-[Your chosen license]
 
 ---
 
