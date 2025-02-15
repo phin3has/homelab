@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: external-dns
-        image: k8s.gcr.io/external-dns/external-dns:v1.15.2
+        image: k8s.gcr.io/external-dns/external-dns:v0.15.1
         args:
         - --source=service # ingress is also possible
         - --domain-filter=phin3has.me 
