@@ -24,13 +24,8 @@ spec:
         - --provider=cloudflare
         - --request-timeout=1m  # Add this line to handle timeouts
         env:
-        - name: CF_API_KEY
+        - name: CF_API_TOKEN
           valueFrom:
             secretKeyRef:
               name: cloudflare-api-token
               key: apiToken
-        - name: CF_API_EMAIL
-          valueFrom:
-            secretKeyRef:
-              name: cloudflare-api-token
-              key: email
