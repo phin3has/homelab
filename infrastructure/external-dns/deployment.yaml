@@ -22,7 +22,8 @@ spec:
         - --source=service
         - --domain-filter=phin3has.me 
         - --provider=cloudflare
-        - --request-timeout=1m  # Add this line to handle timeouts
+        - --cloudflare-proxied
+        - --request-timeout=1m
         env:
         - name: CF_API_TOKEN
           valueFrom:
