@@ -14,13 +14,15 @@ spec:
       labels:
         app: external-dns
     spec:
+      serviceAccountName: external-dns  # Add this line
       containers:
       - name: external-dns
         image: k8s.gcr.io/external-dns/external-dns:v0.15.1
         args:
-        - --source=service # ingress is also possible
+        - --source=service
         - --domain-filter=phin3has.me 
         - --provider=cloudflare
+        - --request-timeout=1m  # Add this line to handle timeouts
         env:
         - name: CF_API_KEY
           valueFrom:
