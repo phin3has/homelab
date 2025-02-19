@@ -1,0 +1,15 @@
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  creationTimestamp: null
+  name: renovate-container-env
+  namespace: default
+spec:
+  encryptedData:
+    RENOVATE_TOKEN: AgBdXA1JC7VN+ZvSneFseobxWLWJZopjp325WyUIF1KPOnAaG648WiAMXU5MwPV4hIxdocUA5fCF/e7VT19BQYufCSE/cH5JlMUnqQxtG8ii81OvhUj81aULM9OHIP+7VzwSf+x0hYXO3olhUTXzWJpruarnhWeG7ZMYQ+qOntn2zwlizFZ0Q3Hr/fbqN4EGYQblFFOGPUSfB+ov8w87PDbnsrP3s5uBe94wKLuWQwD7foJxb8M5UFm94Dv4LZcKflCR8lLSmF+tu9NvRWATzd1Dz7TxfveqH+RfSK4IRcHqJ3uwT0S7GjySb0dEzL01zq3p3JaoPERyoWoxzYBR0jwDz042Y4JsExDkwzOwC4r15Gxn9B5p8bzBgW6vm/0XcITtVJprY1a4wNeIeL2s984bTonWmyFSbarmE4FFOgYquFyj0MQclcc0aUAyE6ld4pUyVBsmmiDomaI5f/bVGdEVSsC1Vm7vxTeVoIzlX71kyXb4dOUW9OfJTc5l4R43MPCZqKeZsA+gR9ncFmeHlDLD8xSfrju4DI/Og0PrkRlaJma26DWDMfYCgIQO8rwD8tDIMlu38NtPcJuU3FlYoX4TzGSBFv7HTOhg3IqhzsfYvfOivEj4ul5ShvPz1BwwAx68r+KF028uaflR7J8PwiyxR2BOcqwL0ZBRy8xWKpBd+BiGDvwm1gum8jXh7tdS4PrLZp9ea5YCs2gzwsoqfkIAuDM/wO8BvTyS+D/P9+96y0ogOE59QhUZ
+  template:
+    metadata:
+      creationTimestamp: null
+      name: renovate-container-env
+      namespace: default
