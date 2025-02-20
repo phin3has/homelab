@@ -42,7 +42,7 @@ graph TD
 ## 📦 Components
 
 - **Cluster OS**: Talos Linux with custom configurations for iSCSI support
-- **Networking**: [Your CNI solution]
+- **Networking**: MetalLB + Traefik 
 - **Storage**: iSCSI CSI driver for Synology integration
 - **GitOps**: Argo CD with App of Apps pattern
 
@@ -105,7 +105,7 @@ This repository uses Argo CD to automatically sync changes to the cluster. The A
 ### Upgrading
 - OS updates are handled through Talos Linux machinery
 - Application updates are managed through GitOps workflows
-- Infrastructure updates follow [your update strategy]
+- Infrastructure updates use replicate. 
 
 ### Backup
 - Persistent data is stored on Synology NAS
