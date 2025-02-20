@@ -5,9 +5,6 @@ metadata:
   namespace: default
   labels:
     app.kubernetes.io/name: homepage
-  annotations:
-    external-dns.alpha.kubernetes.io/hostname: home.phin3has.me
-    external-dns.alpha.kubernetes.io/target: 54e08de2-5664-48f1-8fa4-26580666989f.cfargotunnel.com
 spec:
   type: ClusterIP
   ports:

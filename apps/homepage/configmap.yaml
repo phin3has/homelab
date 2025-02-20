@@ -19,35 +19,48 @@ data:
     - Developer:
         - Github:
             - abbr: GH
-              href: https://github.com/
+              href: https://github.com/phin3has
   services.yaml: |
-    - My First Group:
-        - My First Service:
-            href: http://localhost/
-            description: Homepage is awesome
+    - Homelab:
+      - Grafana:
+            href: http://grafana.phin3has.me
+            description: Grafana
+            icon: grafana.png
+      - Synology:
+            href: http://192.168.11.83:5000/
+            description: Synology
+            icon: synology.png
+      - Audiobookshelf
+            href: http://audiobookshelf.host.or.ip:port
+            description: Audio Bookshelf        
 
-    - My Second Group:
-        - My Second Service:
-            href: http://localhost/
-            description: Homepage is the best
+    - Consuming:
+      - Hacker News:
+            href: https://news.ycombinator.com/
+            description: Hacker News
+            icon: commafeed.png
+      - YouTube:
+            href: https://youtube.com
+            description: YouTube
+            icon: youtube.png
 
-    - My Third Group:
-        - My Third Service:
-            href: http://localhost/
-            description: Homepage is 😎
+    - Misc:
+      - Linkding:
+            href: https://links.phin3has.me/bookmarks
+            description: Linkding
+            icon: linkding.png
+      - N8n:
+            href: https://n8n.phin3has.me
+            description: N8n
+            icon: n8n.png
+      - Claude:
+            href: https://claude.ai/new
+            description: Claude
+            icon: mdi-robot-excited-outline-#DE7552
   widgets.yaml: |
-    - kubernetes:
-        cluster:
-          show: true
-          cpu: true
-          memory: true
-          showLabel: true
-          label: "cluster"
-        nodes:
-          show: true
-          cpu: true
-          memory: true
-          showLabel: true
+    - audiobookshelf
+        url: http://audiobookshelf.host.or.ip:port
+        key: audiobookshelflapikey
     - resources:
         backend: resources
         expanded: true
