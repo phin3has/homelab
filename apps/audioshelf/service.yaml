@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: audiobookshelf
+  namespace: media
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: audio.phin3has.me
+    external-dns.alpha.kubernetes.io/target: 54e08de2-5664-48f1-8fa4-26580666989f.cfargotunnel.com
+spec:
+  selector:
+    app: audiobookshelf
+  ports:
+  - port: 80
+    targetPort: http
+    name: http
