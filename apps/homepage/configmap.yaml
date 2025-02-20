@@ -32,7 +32,7 @@ data:
             icon: synology.png
 
     - Consuming:
-    - Audiobookshelf:
+      - Audiobookshelf:
             href: http://audio.phin3has.me
             description: Audio Bookshelf        
             key: apikey
