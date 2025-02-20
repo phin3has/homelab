@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: git@github.com:phin3has/homelab.git
     targetRevision: HEAD
-    path: apps/apps/audiobookshelf
+    path: apps/audioshelf
   destination:
     server: https://kubernetes.default.svc
     namespace: media
