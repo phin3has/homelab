@@ -30,11 +30,12 @@ data:
             href: http://192.168.11.83:5000/
             description: Synology
             icon: synology.png
-      - Audiobookshelf
-            href: http://audiobookshelf.host.or.ip:port
-            description: Audio Bookshelf        
 
     - Consuming:
+      - Audiobookshelf
+            href: http://audiobookshelf.phin3has.me
+            description: Audio Bookshelf        
+            key: apikey
       - Hacker News:
             href: https://news.ycombinator.com/
             description: Hacker News
