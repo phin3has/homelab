@@ -14,7 +14,7 @@ metadata:
 spec:
   ingressClassName: traefik
   rules:
-    - host: "home.phin3has.me"
+    - host: "home.phin3has.local"
       http:
         paths:
           - path: "/"
