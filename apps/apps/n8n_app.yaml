@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: n8n
+  namespace: argocd
+spec:
+  destination:
+    namespace: n8n
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: apps/n8n  # Assuming you'll place these files in the apps/n8n directory in your Git repository
+    repoURL: git@github.com:phin3has/homelab.git
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
