@@ -23,7 +23,7 @@ data:
   services.yaml: |
     - Homelab:
       - Grafana:
-            href: http://grafana.phin3has.me
+            href: http://grafana.phin3has.local
             description: Grafana
             icon: grafana.png
       - Synology:
@@ -63,7 +63,6 @@ data:
             href: https://claude.ai/new
             description: Claude
             icon: mdi-robot-excited-outline-#DE7552
-
   widgets.yaml: |
     - kubernetes:
         cluster:
@@ -91,7 +90,7 @@ data:
             timeStyle: short
             hour12: true
     - openmeteo:
-            label: Brighton # optional
+        label: Brighton
         latitude: 39.91116671277023
         longitude: -104.81402706969988
         timezone: America/Denver
