@@ -72,18 +72,6 @@ data:
             description: Claude
             icon: mdi-robot-excited-outline-#DE7552
   widgets.yaml: |
-    - kubernetes:
-        cluster:
-          show: true
-          cpu: true
-          memory: true
-          showLabel: true
-          label: "cluster"
-        nodes:
-          show: true
-          cpu: true
-          memory: true
-          showLabel: true
     - resources:
         backend: resources
         expanded: true
