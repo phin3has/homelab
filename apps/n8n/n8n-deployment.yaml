@@ -23,7 +23,7 @@ spec:
         ports:
         - containerPort: 5678
           name: http
-      env:
+        env:
         - name: N8N_PORT
           value: "5678"
         - name: N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS
@@ -56,7 +56,6 @@ spec:
         securityContext:
           runAsUser: 1000
           runAsGroup: 1000
-          fsGroup: 1000
         resources:
           requests:
             memory: "256Mi"
