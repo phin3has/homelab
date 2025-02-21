@@ -23,11 +23,13 @@ spec:
         ports:
         - containerPort: 5678
           name: http
-        env:
+      env:
         - name: N8N_PORT
           value: "5678"
+        - name: N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS
+          value: "true"
         - name: DB_TYPE
-          value: "postgresdb"
+          value: "postgresdb"        
         - name: DB_POSTGRESDB_HOST
           value: "postgres"
         - name: DB_POSTGRESDB_PORT
@@ -84,6 +86,9 @@ kind: Service
 metadata:
   name: n8n
   namespace: n8n
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: n8n.phin3has.me
+    external-dns.alpha.kubernetes.io/target: 54e08de2-5664-48f1-8fa4-26580666989f.cfargotunnel.com
 spec:
   ports:
   - port: 80
