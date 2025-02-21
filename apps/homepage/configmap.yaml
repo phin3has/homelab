@@ -32,6 +32,7 @@ data:
             icon: synology.png
       - Pihole
             href: http://192.168.11.69
+            icon: pihole.png
             version: 5
             key: 
               valueFrom:
