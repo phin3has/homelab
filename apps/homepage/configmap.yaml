@@ -30,8 +30,8 @@ data:
             href: http://192.168.11.83:5000/
             description: Synology
             icon: synology.png
-      - pihole
-            url: http://192.168.11.69
+      - Pihole
+            href: http://192.168.11.69
             version: 5
             key: 
               valueFrom:
