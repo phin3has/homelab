@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: web
+  namespace: hoarder
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: hoard.phin3has.me
+    external-dns.alpha.kubernetes.io/target: 54e08de2-5664-48f1-8fa4-26580666989f.cfargotunnel.com
+spec:
+  selector:
+    app: hoarder-web
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+  type: ClusterIP

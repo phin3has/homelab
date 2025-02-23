@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+  namespace: hoarder
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hoarder-web
+  template:
+    metadata:
+      labels:
+        app: hoarder-web
+    spec:
+      containers:
+        - name: web
+          image: ghcr.io/hoarder-app/hoarder:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+          env:
+            - name: MEILI_ADDR
+              value: http://meilisearch:7700
+            - name: BROWSER_WEB_URL
+              value: http://chrome:9222
+            - name: DATA_DIR
+              value: /data
+          volumeMounts:
+            - mountPath: /data
+              name: data
+          envFrom:
+            - secretRef:
+                name: hoarder-secrets
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: data-pvc

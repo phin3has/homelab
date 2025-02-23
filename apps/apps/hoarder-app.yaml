@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: hoarder
+  namespace: argocd
+spec:
+  destination:
+    namespace: hoarder
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: apps/hoarder
+    repoURL: git@github.com:phin3has/homelab.git
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
