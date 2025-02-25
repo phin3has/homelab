@@ -26,6 +26,8 @@ spec:
               value: http://chrome:9222
             - name: DATA_DIR
               value: /data
+            - name: DISABLE_SIGNUPS
+              value: "true"
           volumeMounts:
             - mountPath: /data
               name: data
