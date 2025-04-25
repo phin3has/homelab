@@ -15,6 +15,9 @@ spec:
       helm:
         valueFiles:
         - $values/infrastructure/networking/authentik/values.yaml
+        valuesFrom:
+        - kind: ConfigMap
+          name: authentik-helm-values
     - repoURL: git@github.com:phin3has/homelab.git
       targetRevision: HEAD
       ref: values
