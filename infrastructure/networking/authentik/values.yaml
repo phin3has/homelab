@@ -12,10 +12,13 @@ authentik:
 server:
     ingress:
         # Specify kubernetes ingress controller class name
-        ingressClassName: nginx | traefik | kong
+        ingressClassName: traefik
         enabled: true
         hosts:
-            - authentik.domain.tld
+            - auth.phin3has.me
+        annotations:
+            external-dns.alpha.kubernetes.io/hostname: auth.phin3has.me
+            external-dns.alpha.kubernetes.io/target: 54e08de2-5664-48f1-8fa4-26580666989f.cfargotunnel.com
 
 postgresql:
     enabled: true
