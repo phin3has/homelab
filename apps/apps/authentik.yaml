@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: authentik
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: traefik
+  sources:
+    - chart: authentik
+      repoURL: https://charts.goauthentik.io
+      targetRevision: 2025.2.4
+      helm:
+        valueFiles:
+        - $values/infrastructure/networking/authentik/values.yaml
+    - repoURL: git@github.com:phin3has/homelab.git
+      targetRevision: HEAD
+      ref: values
+    - repoURL: git@github.com:phin3has/homelab.git
+      targetRevision: HEAD
+      path: infrastructure/networking/authentik/sealed-secrets
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
