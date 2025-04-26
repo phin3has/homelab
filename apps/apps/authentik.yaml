@@ -7,7 +7,7 @@ spec:
   project: default
   destination:
     server: https://kubernetes.default.svc
-    namespace: traefik
+    namespace: authentik
   sources:
     - chart: authentik
       repoURL: https://charts.goauthentik.io
