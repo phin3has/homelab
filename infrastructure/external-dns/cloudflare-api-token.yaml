@@ -1,9 +1,0 @@
-apiVersion: v1
-data:
-  apiToken: QW9YZWRuQ2ZpdUluYWJraV9UN3dNRVE1amx1bFRtVUpia05LY3BMNw==
-  email: YnJhbmRvbmVkbXVuZHNAZ21haWwuY29t
-kind: Secret
-metadata:
-  creationTimestamp: null
-  name: cloudflare-api-token
-  namespace: external-dns
