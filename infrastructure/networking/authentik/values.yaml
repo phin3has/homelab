@@ -17,6 +17,7 @@ server:
         hosts:
             - auth.phin3has.me
         annotations:
+            external-dns.alpha.kubernetes.io/ingress-hostname-source: annotation-only
             external-dns.alpha.kubernetes.io/hostname: auth.phin3has.me
             external-dns.alpha.kubernetes.io/target: 54e08de2-5664-48f1-8fa4-26580666989f.cfargotunnel.com
 
