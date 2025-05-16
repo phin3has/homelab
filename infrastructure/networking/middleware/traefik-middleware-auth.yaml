@@ -1,0 +1,15 @@
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: authentik-forward-auth
+  namespace: traefik
+spec:
+  forwardAuth:
+    address: http://authentik-outpost.authentik.svc.cluster.local:9000/outpost.goauthentik.io/auth/traefik
+    trustForwardHeader: true
+    authResponseHeaders:
+      - X-Authentik-Email
+      - X-Authentik-Username
+      - X-Authentik-Groups
+      - X-Authentik-Name
+      - X-Authentik-UID
