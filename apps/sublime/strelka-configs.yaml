@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: strelka-frontend-config
+  namespace: sublime
+data:
+  frontend.yaml: |
+    version: 2023.07.10
+    server:
+      address: ":57314"
+    coordinator:
+      addr: "sublime-strelka-coordinator:6379"
+      db: 0
+    gatekeeper:
+      addr: "sublime-strelka-coordinator:6379"
+      db: 1
+      ttl: 1m
+      max: 50000000
+    response:
+      chunk: 32768
+    throttle:
+      disk: 0
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: strelka-backend-config
+  namespace: sublime
+data:
+  backend.yaml: |
+    version: 2023.07.10
+    backend:
+      coordinator:
+        addr: "sublime-strelka-coordinator:6379"
+        db: 0
+      limits:
+        max_files: 5000
+        time_limit: 2m
+        max_depth: 15
+        distribution: 600
+        scanner: 30s
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: strelka-manager-config
+  namespace: sublime
+data:
+  manager.yaml: |
+    version: 2023.07.10
+    manager:
+      coordinator:
+        addr: "sublime-strelka-coordinator:6379"
+        db: 0

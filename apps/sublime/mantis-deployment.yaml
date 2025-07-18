@@ -1,0 +1,99 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sublime-mantis
+  namespace: sublime
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sublime-mantis
+  template:
+    metadata:
+      labels:
+        app: sublime-mantis
+    spec:
+      containers:
+      - name: mantis
+        image: sublimesec/mantis:1.66
+        env:
+        - name: POSTGRES_HOST
+          value: sublime-postgres
+        - name: POSTGRES_USER
+          value: sublime
+        - name: POSTGRES_DB
+          value: mantis
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: sublime-secrets
+              key: POSTGRES_PASSWORD
+        - name: REDIS_HOST
+          value: sublime-redis
+        - name: STRELKA_URL
+          value: sublime-strelka-frontend
+        - name: SCREENSHOT_SERVICE_ENDPOINT
+          value: http://sublime-screenshot-service:8100/capture
+        - name: SCREENSHOT_SERVICE_BUCKET
+          value: email-screenshots
+        - name: S3_ENDPOINT
+          value: http://sublimes3:8110
+        - name: USE_SELF_IMAGE_LINKS
+          value: "true"
+        - name: AWS_REGION
+          value: us-east-1
+        - name: HYDRA_URL
+          value: http://sublime-hydra:8200
+        - name: DEPLOYMENT_INFRA_TYPE
+          value: "KUBERNETES"
+        - name: LOG_LEVEL
+          value: "WARN"
+        - name: HYDRA_CLIENT_TIMEOUT_OVERRIDE_SEC
+          value: "30"
+        - name: PERSISTENT_STORAGE
+          value: /data/persistent_storage
+        - name: CORS_ALLOW_ORIGINS
+          value: "https://sublime.phin3has.me"
+        - name: BASE_URL
+          value: "https://sublime-api.phin3has.me"
+        - name: DASHBOARD_PUBLIC_BASE_URL
+          value: "https://sublime.phin3has.me"
+        - name: API_PUBLIC_BASE_URL
+          value: "https://sublime-api.phin3has.me"
+        - name: AWS_ACCESS_KEY_ID
+          value: minioadmin
+        - name: AWS_SECRET_ACCESS_KEY
+          value: minioadmin
+        ports:
+        - containerPort: 8000
+        volumeMounts:
+        - name: persistent-storage
+          mountPath: /data/persistent_storage
+      volumes:
+      - name: persistent-storage
+        persistentVolumeClaim:
+          claimName: sublime-persistent-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sublime-mantis
+  namespace: sublime
+spec:
+  selector:
+    app: sublime-mantis
+  ports:
+  - port: 8000
+    targetPort: 8000
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: sublime-persistent-pvc
+  namespace: sublime
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi

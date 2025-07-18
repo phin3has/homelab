@@ -1,0 +1,145 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sublime-strelka-coordinator
+  namespace: sublime
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sublime-strelka-coordinator
+  template:
+    metadata:
+      labels:
+        app: sublime-strelka-coordinator
+    spec:
+      containers:
+      - name: redis
+        image: redis:alpine
+        command: ["redis-server", "--save", "", "--appendonly", "no"]
+        ports:
+        - containerPort: 6379
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sublime-strelka-coordinator
+  namespace: sublime
+spec:
+  selector:
+    app: sublime-strelka-coordinator
+  ports:
+  - port: 6379
+    targetPort: 6379
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sublime-strelka-frontend
+  namespace: sublime
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sublime-strelka-frontend
+  template:
+    metadata:
+      labels:
+        app: sublime-strelka-frontend
+    spec:
+      containers:
+      - name: strelka-frontend
+        image: sublimesec/strelka-frontend:0.3
+        command: ["strelka-frontend"]
+        volumeMounts:
+        - name: frontend-config
+          mountPath: /etc/strelka/
+        - name: logs
+          mountPath: /var/log/strelka/
+      volumes:
+      - name: frontend-config
+        configMap:
+          name: strelka-frontend-config
+      - name: logs
+        emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sublime-strelka-frontend
+  namespace: sublime
+spec:
+  selector:
+    app: sublime-strelka-frontend
+  ports:
+  - port: 80
+    targetPort: 57314
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sublime-strelka-backend
+  namespace: sublime
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: sublime-strelka-backend
+  template:
+    metadata:
+      labels:
+        app: sublime-strelka-backend
+    spec:
+      containers:
+      - name: strelka-backend
+        image: sublimesec/strelka-backend:0.3
+        command: ["strelka-backend"]
+        resources:
+          requests:
+            memory: "512Mi"
+          limits:
+            memory: "1Gi"
+        securityContext:
+          capabilities:
+            add:
+            - SYS_ADMIN
+        volumeMounts:
+        - name: backend-config
+          mountPath: /etc/strelka/
+        - name: shm
+          mountPath: /dev/shm
+      volumes:
+      - name: backend-config
+        configMap:
+          name: strelka-backend-config
+      - name: shm
+        emptyDir:
+          medium: Memory
+          sizeLimit: 512Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sublime-strelka-manager
+  namespace: sublime
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sublime-strelka-manager
+  template:
+    metadata:
+      labels:
+        app: sublime-strelka-manager
+    spec:
+      containers:
+      - name: strelka-manager
+        image: sublimesec/strelka-manager:0.3
+        command: ["strelka-manager"]
+        volumeMounts:
+        - name: manager-config
+          mountPath: /etc/strelka/
+      volumes:
+      - name: manager-config
+        configMap:
+          name: strelka-manager-config

@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sublime-redis
+  namespace: sublime
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sublime-redis
+  template:
+    metadata:
+      labels:
+        app: sublime-redis
+    spec:
+      containers:
+      - name: redis
+        image: redis:6.2
+        command: ["redis-server", "--loglevel", "warning"]
+        ports:
+        - containerPort: 6379
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sublime-redis
+  namespace: sublime
+spec:
+  selector:
+    app: sublime-redis
+  ports:
+  - port: 6379
+    targetPort: 6379

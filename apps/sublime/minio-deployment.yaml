@@ -1,0 +1,95 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sublimes3
+  namespace: sublime
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sublimes3
+  template:
+    metadata:
+      labels:
+        app: sublimes3
+    spec:
+      containers:
+      - name: minio
+        image: minio/minio
+        env:
+        - name: MINIO_ROOT_USER
+          value: minioadmin
+        - name: MINIO_ROOT_PASSWORD
+          value: minioadmin
+        args:
+        - server
+        - --address
+        - "0.0.0.0:8110"
+        - --console-address
+        - "0.0.0.0:8111"
+        - /data
+        ports:
+        - containerPort: 8110
+          name: api
+        - containerPort: 8111
+          name: console
+        volumeMounts:
+        - name: s3-storage
+          mountPath: /data
+      volumes:
+      - name: s3-storage
+        persistentVolumeClaim:
+          claimName: sublime-s3-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sublimes3
+  namespace: sublime
+spec:
+  selector:
+    app: sublimes3
+  ports:
+  - port: 8110
+    targetPort: 8110
+    name: api
+  - port: 8111
+    targetPort: 8111
+    name: console
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: sublime-s3-pvc
+  namespace: sublime
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sublime-create-buckets
+  namespace: sublime
+spec:
+  template:
+    spec:
+      restartPolicy: OnFailure
+      initContainers:
+      - name: wait-for-minio
+        image: busybox:1.28
+        command: ['sh', '-c', 'until nc -zv sublimes3 8110; do echo "waiting for minio..."; sleep 2; done;']
+      containers:
+      - name: create-buckets
+        image: minio/mc
+        command: 
+        - /bin/sh
+        - -c
+        - |
+          sleep 15
+          /usr/bin/mc alias set myminio http://sublimes3:8110 minioadmin minioadmin
+          /usr/bin/mc mb myminio/email-screenshots || true
+          /usr/bin/mc ls myminio

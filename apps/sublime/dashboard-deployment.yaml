@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sublime-dashboard
+  namespace: sublime
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sublime-dashboard
+  template:
+    metadata:
+      labels:
+        app: sublime-dashboard
+    spec:
+      containers:
+      - name: dashboard
+        image: sublimesec/dashboard:1.66
+        env:
+        - name: MANTIS_HOST_URL
+          value: "http://sublime-mantis:8000"
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sublime-dashboard
+  namespace: sublime
+spec:
+  selector:
+    app: sublime-dashboard
+  ports:
+  - port: 3000
+    targetPort: 80

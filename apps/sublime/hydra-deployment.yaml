@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sublime-hydra
+  namespace: sublime
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sublime-hydra
+  template:
+    metadata:
+      labels:
+        app: sublime-hydra
+    spec:
+      containers:
+      - name: hydra
+        image: sublimesec/hydra-cpu:1.1
+        env:
+        - name: WORKERS
+          value: "1"
+        - name: WEB_CONCURRENCY
+          value: "5"
+        - name: KEEP_ALIVE
+          value: "2"
+        - name: WORKER_TIMEOUT
+          value: "30"
+        - name: GRACEFUL_WORKER_TIMEOUT
+          value: "30"
+        ports:
+        - containerPort: 8200
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sublime-hydra
+  namespace: sublime
+spec:
+  selector:
+    app: sublime-hydra
+  ports:
+  - port: 8200
+    targetPort: 8200

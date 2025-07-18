@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sublime-bora-lite
+  namespace: sublime
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sublime-bora-lite
+  template:
+    metadata:
+      labels:
+        app: sublime-bora-lite
+    spec:
+      containers:
+      - name: bora-lite
+        image: sublimesec/bora-lite:1.66
+        env:
+        - name: POSTGRES_HOST
+          value: sublime-postgres
+        - name: POSTGRES_USER
+          value: sublime
+        - name: POSTGRES_DB
+          value: mantis
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: sublime-secrets
+              key: POSTGRES_PASSWORD
+        - name: REDIS_HOST
+          value: sublime-redis
+        - name: STRELKA_URL
+          value: sublime-strelka-frontend
+        - name: SCREENSHOT_SERVICE_ENDPOINT
+          value: http://sublime-screenshot-service:8100/capture
+        - name: SCREENSHOT_SERVICE_BUCKET
+          value: email-screenshots
+        - name: S3_ENDPOINT
+          value: http://sublimes3:8110
+        - name: AWS_REGION
+          value: us-east-1
+        - name: HYDRA_URL
+          value: http://sublime-hydra:8200
+        - name: DEPLOYMENT_INFRA_TYPE
+          value: "KUBERNETES"
+        - name: LOG_LEVEL
+          value: "WARN"
+        - name: HYDRA_CLIENT_TIMEOUT_OVERRIDE_SEC
+          value: "30"
+        - name: PERSISTENT_STORAGE
+          value: /data/persistent_storage
+        - name: AWS_ACCESS_KEY_ID
+          value: minioadmin
+        - name: AWS_SECRET_ACCESS_KEY
+          value: minioadmin
+        volumeMounts:
+        - name: persistent-storage
+          mountPath: /data/persistent_storage
+      volumes:
+      - name: persistent-storage
+        persistentVolumeClaim:
+          claimName: sublime-persistent-pvc
