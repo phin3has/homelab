@@ -5,7 +5,6 @@ metadata:
   namespace: sublime
 data:
   frontend.yaml: |
-    version: 2023.07.10
     server:
       address: ":57314"
     coordinator:
@@ -20,6 +19,8 @@ data:
       chunk: 32768
     throttle:
       disk: 0
+    logging:
+      level: INFO
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -39,6 +40,8 @@ data:
         max_depth: 15
         distribution: 600
         scanner: 30s
+    logging:
+      level: INFO
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -47,8 +50,9 @@ metadata:
   namespace: sublime
 data:
   manager.yaml: |
-    version: 2023.07.10
     manager:
       coordinator:
         addr: "sublime-strelka-coordinator:6379"
         db: 0
+    logging:
+      level: INFO

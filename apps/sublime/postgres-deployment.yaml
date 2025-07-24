@@ -16,7 +16,7 @@ spec:
       containers:
       - name: postgres
         image: postgres:13.2
-        command: ["-c", "max_connections=200"]
+        args: ["-c", "max_connections=200"]
         env:
         - name: POSTGRES_USER
           value: sublime
