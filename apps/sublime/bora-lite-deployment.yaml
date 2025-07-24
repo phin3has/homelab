@@ -28,6 +28,16 @@ spec:
             secretKeyRef:
               name: sublime-secrets
               key: POSTGRES_PASSWORD
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: sublime-secrets
+              key: JWT_SECRET
+        - name: POSTGRES_ENCRYPTION_KEY
+          valueFrom:
+            secretKeyRef:
+              name: sublime-secrets
+              key: POSTGRES_ENCRYPTION_KEY
         - name: REDIS_HOST
           value: sublime-redis
         - name: STRELKA_URL
