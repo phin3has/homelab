@@ -19,6 +19,10 @@ spec:
         env:
         - name: MANTIS_HOST_URL
           value: "http://sublime-mantis:8000"
+        - name: NEXT_PUBLIC_API_URL
+          value: "https://sublime-api.phin3has.me"
+        - name: API_URL
+          value: "http://sublime-mantis:8000"
         ports:
         - containerPort: 80
 ---
