@@ -42,8 +42,6 @@ spec:
           value: sublime-redis
         - name: STRELKA_URL
           value: sublime-strelka-frontend
-        - name: STRELKA_PORT
-          value: "80"
         - name: SCREENSHOT_SERVICE_ENDPOINT
           value: http://sublime-screenshot-service:8100/capture
         - name: SCREENSHOT_SERVICE_BUCKET
