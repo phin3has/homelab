@@ -33,8 +33,8 @@ data:
       db: 0
     tasting:
       mime_db: null
-      yara_rules: '/strelka/config'
-    scanners: '/strelka/config/scanners.yaml'
+      yara_rules: '/etc/strelka/yara'
+    scanners: '/etc/strelka/scanners.yaml'
   logging.yaml: |
     version: 1
     formatters:

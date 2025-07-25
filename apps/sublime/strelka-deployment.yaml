@@ -102,6 +102,8 @@ spec:
           mountPath: /etc/strelka/
         - name: shm
           mountPath: /dev/shm
+        - name: yara-rules
+          mountPath: /etc/strelka/yara
       volumes:
       - name: backend-config
         configMap:
@@ -110,6 +112,9 @@ spec:
         emptyDir:
           medium: Memory
           sizeLimit: 512Mi
+      - name: yara-rules
+        configMap:
+          name: strelka-backend-yara
 ---
 apiVersion: apps/v1
 kind: Deployment

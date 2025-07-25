@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: strelka-backend-yara
+  namespace: sublime
+data:
+  # Empty YARA rules directory
+  README.md: |
+    # YARA Rules
+    This directory would contain YARA rules for file analysis.
+    Currently empty for minimal deployment.
