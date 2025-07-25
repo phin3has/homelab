@@ -92,6 +92,7 @@ spec:
       containers:
       - name: strelka-backend
         image: sublimesec/strelka-backend:0.3
+        args: ["-c", "/etc/strelka/backend.yaml"]
         resources:
           requests:
             memory: "512Mi"
