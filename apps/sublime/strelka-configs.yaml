@@ -5,22 +5,14 @@ metadata:
   namespace: sublime
 data:
   frontend.yaml: |
-    server:
-      address: ":57314"
+    server: ":57314"
     coordinator:
-      addr: "sublime-strelka-coordinator:6379"
+      addr: 'sublime-strelka-coordinator:6379'
       db: 0
-    gatekeeper:
-      addr: "sublime-strelka-coordinator:6379"
-      db: 1
-      ttl: 1m
-      max: 50000000
+      pool: 100
+      read: 10s
     response:
-      chunk: 32768
-    throttle:
-      disk: 0
-    logging:
-      level: INFO
+      log: "/var/log/strelka/strelka.log"
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -29,19 +21,59 @@ metadata:
   namespace: sublime
 data:
   backend.yaml: |
-    version: 2023.07.10
-    backend:
-      coordinator:
-        addr: "sublime-strelka-coordinator:6379"
-        db: 0
-      limits:
-        max_files: 5000
-        time_limit: 2m
-        max_depth: 15
-        distribution: 600
-        scanner: 30s
-    logging:
-      level: INFO
+    logging_cfg: '/etc/strelka/logging.yaml'
+    limits:
+      max_files: 5000
+      time_to_live: 900
+      max_depth: 15
+      distribution: 600
+      scanner: 150
+    coordinator:
+      addr: 'sublime-strelka-coordinator:6379'
+      db: 0
+    tasting:
+      mime_db: null
+      yara_rules: '/strelka/config'
+    scanners: '/strelka/config/scanners.yaml'
+  logging.yaml: |
+    version: 1
+    formatters:
+      simple:
+        format: '%(asctime)s - [%(levelname)s] %(name)s [%(module)s.%(funcName)s]: %(message)s'
+        datefmt: '%Y-%m-%d %H:%M:%S'
+    handlers:
+      console:
+        class: logging.StreamHandler
+        formatter: simple
+        stream: ext://sys.stdout
+    root:
+      level: DEBUG
+      handlers: [console]
+    loggers:
+      OpenSSL:
+        propagate: 0
+      bs4:
+        propagate: 0
+      chardet:
+        propagate: 0
+  scanners.yaml: |
+    'ScanElf':
+    'ScanEmail':
+    'ScanGif':
+    'ScanGzip':
+    'ScanHash':
+    'ScanHeader':
+    'ScanHtml':
+    'ScanJpeg':
+    'ScanJson':
+    'ScanPdf':
+    'ScanPe':
+    'ScanPng':
+    'ScanRar':
+    'ScanRpm':
+    'ScanTar':
+    'ScanUrl':
+    'ScanZip':
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -50,9 +82,8 @@ metadata:
   namespace: sublime
 data:
   manager.yaml: |
-    manager:
-      coordinator:
-        addr: "sublime-strelka-coordinator:6379"
-        db: 0
-    logging:
-      level: INFO
+    coordinator:
+      addr: 'sublime-strelka-coordinator:6379'
+      db: 0
+      pool: 100
+      read: 10s
