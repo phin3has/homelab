@@ -50,10 +50,7 @@ spec:
       containers:
       - name: strelka-frontend
         image: sublimesec/strelka-frontend:0.3
-        command: ["strelka-frontend"]
-        env:
-        - name: STRELKA_FRONTEND_CONFIG
-          value: /etc/strelka/frontend.yaml
+        args: ["-c", "/etc/strelka/frontend.yaml"]
         volumeMounts:
         - name: frontend-config
           mountPath: /etc/strelka/
@@ -96,10 +93,7 @@ spec:
       containers:
       - name: strelka-backend
         image: sublimesec/strelka-backend:0.3
-        command: ["strelka-backend"]
-        env:
-        - name: STRELKA_BACKEND_CONFIG
-          value: /etc/strelka/backend.yaml
+        args: ["-c", "/etc/strelka/backend.yaml"]
         resources:
           requests:
             memory: "512Mi"
@@ -137,10 +131,7 @@ spec:
       containers:
       - name: strelka-manager
         image: sublimesec/strelka-manager:0.3
-        command: ["strelka-manager"]
-        env:
-        - name: STRELKA_MANAGER_CONFIG
-          value: /etc/strelka/manager.yaml
+        args: ["-c", "/etc/strelka/manager.yaml"]
         volumeMounts:
         - name: manager-config
           mountPath: /etc/strelka/

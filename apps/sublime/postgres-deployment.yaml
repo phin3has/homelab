@@ -23,7 +23,7 @@ spec:
         - name: POSTGRES_DB
           value: mantis
         - name: PGDATA
-          value: /data/postgres
+          value: /data/postgres/pgdata
         - name: POSTGRES_PASSWORD
           valueFrom:
             secretKeyRef:
