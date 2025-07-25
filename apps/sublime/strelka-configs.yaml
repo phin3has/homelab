@@ -31,10 +31,6 @@ data:
     coordinator:
       addr: 'sublime-strelka-coordinator:6379'
       db: 0
-    tasting:
-      mime_db: null
-      yara_rules: '/etc/strelka/yara'
-    scanners: '/etc/strelka/scanners.yaml'
   logging.yaml: |
     version: 1
     formatters:
@@ -57,23 +53,7 @@ data:
       chardet:
         propagate: 0
   scanners.yaml: |
-    'ScanElf':
-    'ScanEmail':
-    'ScanGif':
-    'ScanGzip':
-    'ScanHash':
-    'ScanHeader':
-    'ScanHtml':
-    'ScanJpeg':
-    'ScanJson':
-    'ScanPdf':
-    'ScanPe':
-    'ScanPng':
-    'ScanRar':
-    'ScanRpm':
-    'ScanTar':
-    'ScanUrl':
-    'ScanZip':
+    # Empty scanners configuration for testing
 ---
 apiVersion: v1
 kind: ConfigMap
