@@ -65,7 +65,7 @@ spec:
         - name: CORS_ALLOW_ORIGINS
           value: "https://sublime.phin3has.me"
         - name: BASE_URL
-          value: "https://sublime-api.phin3has.me"
+          value: "https://sublime.phin3has.me"
         - name: DASHBOARD_PUBLIC_BASE_URL
           value: "https://sublime.phin3has.me"
         - name: API_PUBLIC_BASE_URL
