@@ -4,7 +4,7 @@ metadata:
   name: sublime-dashboard
   namespace: sublime
   annotations:
-    # traefik.ingress.kubernetes.io/router.middlewares: traefik-authentik-forward-auth@kubernetescrd
+    traefik.ingress.kubernetes.io/router.middlewares: traefik-authentik-forward-auth@kubernetescrd
     external-dns.alpha.kubernetes.io/hostname: sublime.phin3has.me
     external-dns.alpha.kubernetes.io/target: 54e08de2-5664-48f1-8fa4-26580666989f.cfargotunnel.com
 spec:
@@ -27,7 +27,7 @@ metadata:
   name: sublime-api
   namespace: sublime
   annotations:
-    # traefik.ingress.kubernetes.io/router.middlewares: traefik-authentik-forward-auth@kubernetescrd
+    traefik.ingress.kubernetes.io/router.middlewares: traefik-authentik-forward-auth@kubernetescrd
     external-dns.alpha.kubernetes.io/hostname: sublime-api.phin3has.me
     external-dns.alpha.kubernetes.io/target: 54e08de2-5664-48f1-8fa4-26580666989f.cfargotunnel.com
 spec:
