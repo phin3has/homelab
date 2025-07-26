@@ -17,16 +17,18 @@ spec:
       - name: dashboard
         image: sublimesec/dashboard:1.66
         env:
-        - name: BASE_URL
-          value: "http://sublime-mantis:8000"
         - name: MANTIS_HOST_URL
-          value: "http://sublime-mantis:8000"
-        - name: NEXT_PUBLIC_API_URL
-          value: "https://sublime-api.phin3has.me"
-        - name: API_URL
           value: "http://sublime-mantis:8000"
         - name: PORT
           value: "80"
+        - name: CORS_ALLOW_ORIGINS
+          value: "https://sublime.phin3has.me"
+        - name: BASE_URL
+          value: "http://sublime-mantis:8000"
+        - name: DASHBOARD_PUBLIC_BASE_URL
+          value: "https://sublime.phin3has.me"
+        - name: API_PUBLIC_BASE_URL
+          value: "https://sublime-api.phin3has.me"
         ports:
         - containerPort: 80
 ---
