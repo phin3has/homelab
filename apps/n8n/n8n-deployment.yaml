@@ -30,6 +30,8 @@ spec:
           value: "5678"
         - name: N8N_TRUST_PROXY
           value: "true"
+        - name: N8N_PROXY_HOPS
+          value: "2"
         - name: N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS
           value: "true"
         - name: DB_TYPE
