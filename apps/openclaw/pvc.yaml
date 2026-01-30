@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: openclaw-data
+  namespace: openclaw
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: synology-iscsi
+  resources:
+    requests:
+      storage: 5Gi

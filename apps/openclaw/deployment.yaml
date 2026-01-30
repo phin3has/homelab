@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openclaw
+  namespace: openclaw
+  labels:
+    app: openclaw
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: openclaw
+  template:
+    metadata:
+      labels:
+        app: openclaw
+    spec:
+      securityContext:
+        fsGroup: 1000
+      containers:
+        - name: openclaw
+          image: ghcr.io/openclaw/openclaw:2026.1.29
+          command: ["node", "dist/index.js", "gateway"]
+          ports:
+            - containerPort: 18789
+              name: http
+          envFrom:
+            - secretRef:
+                name: openclaw-env
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            allowPrivilegeEscalation: false
+          volumeMounts:
+            - name: openclaw-data
+              mountPath: /home/node/.openclaw
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "1000m"
+      volumes:
+        - name: openclaw-data
+          persistentVolumeClaim:
+            claimName: openclaw-data
