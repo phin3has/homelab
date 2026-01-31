@@ -29,6 +29,11 @@ spec:
           env:
             - name: NODE_OPTIONS
               value: "--max-old-space-size=768"
+            - name: OPENCLAW_GATEWAY_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: openclaw-env
+                  key: OPENCLAW_GATEWAY_TOKEN
           envFrom:
             - secretRef:
                 name: openclaw-env
