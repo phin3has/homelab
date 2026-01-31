@@ -26,6 +26,9 @@ spec:
           ports:
             - containerPort: 18789
               name: http
+          env:
+            - name: NODE_OPTIONS
+              value: "--max-old-space-size=768"
           envFrom:
             - secretRef:
                 name: openclaw-env
