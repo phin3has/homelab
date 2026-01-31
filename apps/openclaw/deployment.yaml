@@ -22,7 +22,7 @@ spec:
       containers:
         - name: openclaw
           image: ghcr.io/openclaw/openclaw:2026.1.29
-          command: ["node", "dist/index.js", "gateway"]
+          command: ["node", "dist/index.js", "gateway", "--allow-unconfigured"]
           ports:
             - containerPort: 18789
               name: http
