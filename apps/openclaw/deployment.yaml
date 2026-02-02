@@ -19,6 +19,32 @@ spec:
     spec:
       securityContext:
         fsGroup: 1000
+      initContainers:
+        - name: install-tools
+          image: alpine:3.19
+          command:
+            - sh
+            - -c
+            - |
+              apk add --no-cache curl &&
+              GH_VERSION=2.62.0 &&
+              curl -fsSL "https://github.com/cli/cli/releases/download/v${GH_VERSION}/gh_${GH_VERSION}_linux_amd64.tar.gz" \
+                | tar xz -C /tools --strip-components=1 &&
+              cat > /tools/bin/git-credential-gh-token <<'SCRIPT'
+              #!/bin/sh
+              case "$1" in
+                get)
+                  echo "protocol=https"
+                  echo "host=github.com"
+                  echo "username=x-access-token"
+                  echo "password=$GH_TOKEN"
+                  ;;
+              esac
+              SCRIPT
+              chmod +x /tools/bin/git-credential-gh-token
+          volumeMounts:
+            - name: tools
+              mountPath: /tools
       containers:
         - name: openclaw
           image: ghcr.io/openclaw/openclaw:2026.1.29
@@ -27,8 +53,16 @@ spec:
             - containerPort: 18789
               name: http
           env:
+            - name: PATH
+              value: "/tools/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
             - name: NODE_OPTIONS
               value: "--max-old-space-size=768"
+            - name: GIT_CONFIG_COUNT
+              value: "1"
+            - name: GIT_CONFIG_KEY_0
+              value: "credential.https://github.com.helper"
+            - name: GIT_CONFIG_VALUE_0
+              value: "/tools/bin/git-credential-gh-token"
             - name: OPENCLAW_GATEWAY_PASSWORD
               valueFrom:
                 secretKeyRef:
@@ -42,6 +76,9 @@ spec:
             runAsGroup: 1000
             allowPrivilegeEscalation: false
           volumeMounts:
+            - name: tools
+              mountPath: /tools
+              readOnly: true
             - name: openclaw-data
               mountPath: /home/node/.openclaw
           resources:
@@ -52,6 +89,8 @@ spec:
               memory: "1Gi"
               cpu: "1000m"
       volumes:
+        - name: tools
+          emptyDir: {}
         - name: openclaw-data
           persistentVolumeClaim:
             claimName: openclaw-data
