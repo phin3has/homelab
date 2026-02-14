@@ -68,6 +68,16 @@ spec:
                 secretKeyRef:
                   name: openclaw-env
                   key: OPENCLAW_GATEWAY_TOKEN
+            - name: ANTHROPIC_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: openclaw-env
+                  key: ANTHROPIC_API_KEY
+            - name: NOTION_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: openclaw-env
+                  key: NOTION_API_KEY
           envFrom:
             - secretRef:
                 name: openclaw-env
