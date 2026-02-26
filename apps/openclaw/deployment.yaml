@@ -48,7 +48,7 @@ spec:
       containers:
         - name: openclaw
           image: ghcr.io/openclaw/openclaw:2026.2.25
-          command: ["node", "dist/index.js", "gateway", "--allow-unconfigured"]
+          command: ["node", "dist/index.js", "gateway", "--allow-unconfigured", "--gateway-control-ui-allowed-origins", "https://claw.phin3has.local"]
           ports:
             - containerPort: 18789
               name: http
