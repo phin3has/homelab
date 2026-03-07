@@ -42,8 +42,9 @@ spec:
               esac
               SCRIPT
               chmod +x /tools/bin/git-credential-gh-token &&
-              # Install QMD via npm
-              npm install -g --prefix /tools https://github.com/tobi/qmd &&
+              # Install QMD via npm (use --install-links to avoid symlinks to temp dirs)
+              npm install -g --prefix /tools --cache /tools/.npm-cache --install-links https://github.com/tobi/qmd &&
+              rm -rf /tools/.npm-cache &&
               chmod -R a+rX /tools
           volumeMounts:
             - name: tools
