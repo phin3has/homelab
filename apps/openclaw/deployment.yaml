@@ -76,7 +76,7 @@ spec:
               if [ ! -d /home/node/.openclaw/python-packages/agentmail ]; then
                 echo "Installing Python packages..."
                 mkdir -p /home/node/.openclaw/python-packages &&
-                pip3 install --target /home/node/.openclaw/python-packages agentmail
+                python3 -m pip install --target /home/node/.openclaw/python-packages agentmail
               else
                 echo "Python packages already installed, skipping."
               fi
