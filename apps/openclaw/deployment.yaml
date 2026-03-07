@@ -67,6 +67,31 @@ spec:
           volumeMounts:
             - name: openclaw-data
               mountPath: /home/node/.openclaw
+        - name: install-python
+          image: python:3.12-alpine
+          command:
+            - sh
+            - -c
+            - |
+              if [ ! -f /home/node/.openclaw/python/bin/python3 ]; then
+                echo "Installing Python to PVC..."
+                mkdir -p /home/node/.openclaw/python &&
+                cp -a /usr/local/bin/python3* /home/node/.openclaw/python/bin/ 2>/dev/null
+                cp -a /usr/local/lib/python3.12 /home/node/.openclaw/python/lib/ 2>/dev/null
+                # Create a standalone venv instead (more reliable)
+                rm -rf /home/node/.openclaw/python &&
+                python3 -m venv /home/node/.openclaw/python &&
+                /home/node/.openclaw/python/bin/pip install --upgrade pip &&
+                /home/node/.openclaw/python/bin/pip install agentmail
+              else
+                echo "Python already installed, skipping."
+              fi
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+          volumeMounts:
+            - name: openclaw-data
+              mountPath: /home/node/.openclaw
       containers:
         - name: openclaw
           image: ghcr.io/openclaw/openclaw:2026.3.2
@@ -76,7 +101,7 @@ spec:
               name: http
           env:
             - name: PATH
-              value: "/home/node/.openclaw/qmd/node_modules/.bin:/tools/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+              value: "/home/node/.openclaw/python/bin:/home/node/.openclaw/qmd/node_modules/.bin:/tools/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
             - name: NODE_OPTIONS
               value: "--max-old-space-size=1536"
             - name: GIT_CONFIG_COUNT
