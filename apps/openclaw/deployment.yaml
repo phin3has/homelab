@@ -26,7 +26,7 @@ spec:
             - sh
             - -c
             - |
-              apk add --no-cache curl nodejs npm git &&
+              apk add --no-cache curl &&
               GH_VERSION=2.62.0 &&
               curl -fsSL "https://github.com/cli/cli/releases/download/v${GH_VERSION}/gh_${GH_VERSION}_linux_amd64.tar.gz" \
                 | tar xz -C /tools --strip-components=1 &&
@@ -41,14 +41,32 @@ spec:
                   ;;
               esac
               SCRIPT
-              chmod +x /tools/bin/git-credential-gh-token &&
-              # Install QMD via npm (use --install-links to avoid symlinks to temp dirs)
-              npm install -g --prefix /tools --cache /tools/.npm-cache --install-links https://github.com/tobi/qmd &&
-              rm -rf /tools/.npm-cache &&
-              chmod -R a+rX /tools
+              chmod +x /tools/bin/git-credential-gh-token
           volumeMounts:
             - name: tools
               mountPath: /tools
+        - name: install-qmd
+          image: ghcr.io/openclaw/openclaw:2026.3.2
+          command:
+            - sh
+            - -c
+            - |
+              if [ ! -f /home/node/.openclaw/qmd/node_modules/.package-lock.json ]; then
+                echo "Installing QMD..."
+                mkdir -p /home/node/.openclaw/qmd &&
+                cd /home/node/.openclaw/qmd &&
+                npm init -y &&
+                npm install --install-links @tobilu/qmd &&
+                ln -sf /home/node/.openclaw/qmd/node_modules/.bin/qmd /home/node/.openclaw/qmd/qmd
+              else
+                echo "QMD already installed, skipping."
+              fi
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+          volumeMounts:
+            - name: openclaw-data
+              mountPath: /home/node/.openclaw
       containers:
         - name: openclaw
           image: ghcr.io/openclaw/openclaw:2026.3.2
@@ -58,7 +76,7 @@ spec:
               name: http
           env:
             - name: PATH
-              value: "/tools/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+              value: "/home/node/.openclaw/qmd/node_modules/.bin:/tools/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
             - name: NODE_OPTIONS
               value: "--max-old-space-size=1536"
             - name: GIT_CONFIG_COUNT
