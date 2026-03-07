@@ -43,7 +43,8 @@ spec:
               SCRIPT
               chmod +x /tools/bin/git-credential-gh-token &&
               # Install QMD via npm
-              npm install -g --prefix /tools https://github.com/tobi/qmd
+              npm install -g --prefix /tools https://github.com/tobi/qmd &&
+              chmod -R a+rX /tools
           volumeMounts:
             - name: tools
               mountPath: /tools
