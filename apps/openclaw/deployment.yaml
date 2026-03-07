@@ -26,7 +26,7 @@ spec:
             - sh
             - -c
             - |
-              apk add --no-cache curl bash &&
+              apk add --no-cache curl nodejs npm &&
               GH_VERSION=2.62.0 &&
               curl -fsSL "https://github.com/cli/cli/releases/download/v${GH_VERSION}/gh_${GH_VERSION}_linux_amd64.tar.gz" \
                 | tar xz -C /tools --strip-components=1 &&
@@ -42,10 +42,8 @@ spec:
               esac
               SCRIPT
               chmod +x /tools/bin/git-credential-gh-token &&
-              # Install bun (needed for QMD)
-              curl -fsSL https://bun.sh/install | BUN_INSTALL=/tools bash &&
-              # Install QMD via bun
-              /tools/bin/bun install -g --prefix /tools https://github.com/tobi/qmd
+              # Install QMD via npm
+              npm install -g --prefix /tools https://github.com/tobi/qmd
           volumeMounts:
             - name: tools
               mountPath: /tools
