@@ -41,13 +41,17 @@ spec:
                   ;;
               esac
               SCRIPT
-              chmod +x /tools/bin/git-credential-gh-token
+              chmod +x /tools/bin/git-credential-gh-token &&
+              # Install bun (needed for QMD)
+              curl -fsSL https://bun.sh/install | BUN_INSTALL=/tools bash &&
+              # Install QMD via bun
+              /tools/bin/bun install -g --prefix /tools https://github.com/tobi/qmd
           volumeMounts:
             - name: tools
               mountPath: /tools
       containers:
         - name: openclaw
-          image: ghcr.io/openclaw/openclaw:2026.2.25
+          image: ghcr.io/openclaw/openclaw:2026.3.2
           command: ["node", "dist/index.js", "gateway", "--allow-unconfigured"]
           ports:
             - containerPort: 18789
@@ -56,7 +60,7 @@ spec:
             - name: PATH
               value: "/tools/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
             - name: NODE_OPTIONS
-              value: "--max-old-space-size=768"
+              value: "--max-old-space-size=1536"
             - name: GIT_CONFIG_COUNT
               value: "1"
             - name: GIT_CONFIG_KEY_0
@@ -93,11 +97,11 @@ spec:
               mountPath: /home/node/.openclaw
           resources:
             requests:
-              memory: "256Mi"
-              cpu: "250m"
+              memory: "512Mi"
+              cpu: "500m"
             limits:
-              memory: "1Gi"
-              cpu: "1000m"
+              memory: "2Gi"
+              cpu: "2000m"
       volumes:
         - name: tools
           emptyDir: {}
