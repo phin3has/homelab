@@ -68,7 +68,7 @@ spec:
             - name: openclaw-data
               mountPath: /home/node/.openclaw
         - name: install-python-packages
-          image: ghcr.io/openclaw/openclaw:2026.3.2
+          image: python:3.11-alpine
           command:
             - sh
             - -c
@@ -76,7 +76,7 @@ spec:
               if [ ! -d /home/node/.openclaw/python-packages/agentmail ]; then
                 echo "Installing Python packages..."
                 mkdir -p /home/node/.openclaw/python-packages &&
-                python3 -m pip install --target /home/node/.openclaw/python-packages agentmail
+                pip install --target /home/node/.openclaw/python-packages agentmail
               else
                 echo "Python packages already installed, skipping."
               fi
