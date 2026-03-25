@@ -41,10 +41,6 @@ data:
           "heartbeat": {
             "every": "30m",
             "target": "last"
-          },
-
-          "groupChat": {
-            "mentionPatterns": ["@openclaw", "openclaw", "@claw", "claw"]
           }
         }
       },
