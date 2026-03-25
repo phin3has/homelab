@@ -46,7 +46,7 @@ spec:
             - name: tools
               mountPath: /tools
         - name: install-qmd
-          image: ghcr.io/openclaw/openclaw:2026.3.2
+          image: ghcr.io/openclaw/openclaw:2026.3.23-2
           command:
             - sh
             - -c
@@ -86,10 +86,42 @@ spec:
           volumeMounts:
             - name: openclaw-data
               mountPath: /home/node/.openclaw
+        - name: seed-workspace
+          image: alpine:3.19
+          command:
+            - sh
+            - -c
+            - |
+              WORKSPACE="/home/node/.openclaw/workspace"
+              mkdir -p "$WORKSPACE" "$WORKSPACE/memory"
+
+              # Seed workspace files only if they don't already exist (preserve user edits)
+              for file in AGENTS.md SOUL.md IDENTITY.md USER.md MEMORY.md HEARTBEAT.md; do
+                if [ ! -f "$WORKSPACE/$file" ]; then
+                  echo "Seeding $file..."
+                  cp "/seed/$file" "$WORKSPACE/$file"
+                else
+                  echo "$file already exists, skipping."
+                fi
+              done
+
+              # Always update openclaw.json config (not user-editable workspace file)
+              echo "Writing openclaw.json..."
+              cp /config/openclaw.json /home/node/.openclaw/openclaw.json
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+          volumeMounts:
+            - name: openclaw-data
+              mountPath: /home/node/.openclaw
+            - name: workspace-seed
+              mountPath: /seed
+            - name: openclaw-config
+              mountPath: /config
       containers:
         - name: openclaw
-          image: ghcr.io/openclaw/openclaw:2026.3.2
-          command: ["node", "dist/index.js", "gateway", "--allow-unconfigured"]
+          image: ghcr.io/openclaw/openclaw:2026.3.23-2
+          command: ["node", "dist/index.js", "gateway"]
           ports:
             - containerPort: 18789
               name: http
@@ -147,3 +179,9 @@ spec:
         - name: openclaw-data
           persistentVolumeClaim:
             claimName: openclaw-data
+        - name: workspace-seed
+          configMap:
+            name: openclaw-workspace-seed
+        - name: openclaw-config
+          configMap:
+            name: openclaw-config

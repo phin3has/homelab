@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: openclaw-config
+  namespace: openclaw
+  labels:
+    app: openclaw
+data:
+  openclaw.json: |
+    {
+      "$schema": "https://docs.openclaw.ai/schema/config.json",
+
+      "agents": {
+        "defaults": {
+          "workspace": "/home/node/.openclaw/workspace",
+
+          "model": {
+            "primary": "openai/gpt-5.4",
+            "fallbacks": [
+              "anthropic/claude-sonnet-4-6",
+              "anthropic/claude-opus-4-6"
+            ]
+          },
+
+          "models": {
+            "openai/gpt-5.4": { "alias": "GPT" },
+            "anthropic/claude-sonnet-4-6": { "alias": "Sonnet" },
+            "anthropic/claude-opus-4-6": { "alias": "Opus" }
+          },
+
+          "compaction": {
+            "reserveTokensFloor": 40000,
+            "memoryFlush": {
+              "enabled": true,
+              "softThresholdTokens": 6000,
+              "systemPrompt": "Session nearing compaction. Store all durable memories now.",
+              "prompt": "Write any lasting notes, context, and session summary to memory/YYYY-MM-DD.md and update MEMORY.md with long-term learnings. Reply with NO_REPLY if nothing to store."
+            }
+          },
+
+          "heartbeat": {
+            "every": "30m",
+            "target": "last"
+          },
+
+          "groupChat": {
+            "mentionPatterns": ["@openclaw", "openclaw", "@claw", "claw"]
+          }
+        }
+      },
+
+      "session": {
+        "dmScope": "per-channel-peer",
+        "threadBindings": {
+          "enabled": true,
+          "idleHours": 24,
+          "maxAgeHours": 0
+        },
+        "reset": {
+          "mode": "daily",
+          "atHour": 4,
+          "idleMinutes": 120
+        }
+      },
+
+      "plugins": {
+        "slots": {
+          "memory": "memory-core"
+        }
+      }
+    }
