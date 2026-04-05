@@ -46,7 +46,7 @@ spec:
             - name: tools
               mountPath: /tools
         - name: install-qmd
-          image: ghcr.io/openclaw/openclaw:2026.3.23-2
+          image: ghcr.io/openclaw/openclaw:v2026.4.2
           command:
             - sh
             - -c
@@ -120,7 +120,7 @@ spec:
               mountPath: /config
       containers:
         - name: openclaw
-          image: ghcr.io/openclaw/openclaw:2026.3.23-2
+          image: ghcr.io/openclaw/openclaw:v2026.4.2
           command: ["node", "dist/index.js", "gateway"]
           ports:
             - containerPort: 18789
