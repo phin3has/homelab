@@ -41,15 +41,6 @@ data:
                   key: apikey
 
     - Media:
-      - Audiobookshelf:
-            href: http://audio.phin3has.me
-            description: Audio Bookshelf        
-            key: 
-              valueFrom:
-                secretKeyRef:
-                  name: audiobookshelf-apikey
-                  key: apikey
-            icon: audiobookshelf.png
       - Hacker News:
             href: https://news.ycombinator.com/
             description: Hacker News
